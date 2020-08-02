@@ -2,21 +2,6 @@
   <div class="answer-selection">
     <div class="answer-title">答案選項: (請勾選正確答案)</div>
     <component :is="answer"></component>
-    <!-- <div v-if="answerType === '是非'"> -->
-        <!-- <q-radio size="xl" v-model="answer" val="true"><div style="font-size: 30px; margin-right: 20px;">O</div></q-radio>
-        <q-radio size="xl" v-model="answer" val="false"><div style="font-size: 30px;">X</div></q-radio> -->
-    <!-- </div> -->
-    <!-- <div v-else>
-      <q-option-group
-        inline
-        v-model="group"
-        :options="options"
-        color="primary"
-      >
-        <q-input label="test" outlined></q-input>
-      </q-option-group>
-    </div>
-    <div></div> -->
   </div>
 </template>
 <script>

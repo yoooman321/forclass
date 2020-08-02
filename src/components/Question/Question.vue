@@ -1,6 +1,5 @@
 <template>
   <div class="question-part">
-    <div class="question-index">Question {{index}}</div>
     <div class="title">
       <q-input
       outlined
@@ -30,11 +29,6 @@ export default {
     return {
       title: '',
       img: null
-    }
-  },
-  watch: {
-    img () {
-      console.log('img: ', this.img)
     }
   },
   methods: {

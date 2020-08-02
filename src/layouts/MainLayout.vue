@@ -3,13 +3,11 @@
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="left = !left" />
-
         <q-toolbar-title>
           課堂使用
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
-
     <q-drawer
       v-model="left"
       side="left"

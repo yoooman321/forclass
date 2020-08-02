@@ -1,18 +1,37 @@
 <template>
-  <!-- <q-page class="flex flex-center"> -->
     <div class="new">
       <div class="set" v-for="(question, index) in questionList" :key="index">
-        <question :index="question.index" @changeTitle = "questionTitleChange"></question>
-        <div class="answer-title">答案區</div>
-        <div class="answer-part">
-          <answer-type :index="question.index" @changeAnswerType = "changeAnswerType"></answer-type>
-          <setting :index="question.index" @changeLimitedTime = "changeLimitedTime"></setting>
+        <div class="question-index">
+          <div>Question {{question.index}}
+            <span v-if="!question.expanded" class="question-title"> - {{ question.questionTitle }}</span>
+          </div>
+          <q-btn
+            color="primary"
+            round
+            flat
+            size="lg"
+            :icon="question.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+            @click="question.expanded = !question.expanded"
+          ></q-btn>
         </div>
-        <selection :index="question.index" :answerType="question.answerType"></selection>
+         <q-slide-transition>
+           <div v-show="question.expanded">
+             <question :index="question.index" @changeTitle = "questionTitleChange"></question>
+              <div class="answer-title">答案區</div>
+              <div class="answer-part">
+                <answer-type :index="question.index" @changeAnswerType = "changeAnswerType"></answer-type>
+                <setting :index="question.index" @changeLimitedTime = "changeLimitedTime"></setting>
+              </div>
+              <selection :index="question.index" :answerType="question.answerType"></selection>
+           </div>
+         </q-slide-transition>
       </div>
-      <q-btn icon="add_box" outline color="primary" class="full-width" label="新增問題" size='lg' @click="addQuestion()"></q-btn>
+        <q-btn icon="add_box" outline color="primary" class="full-width button" label="新增問題" size='lg' @click="addQuestion()"></q-btn>
+      <div class="button">
+        <q-btn fill color="primary" label="儲存" class="saveButton" size='lg' @click="saveForm()"></q-btn>
+        <q-btn fill color="primary" label="重置" size='lg' class="resetButton" @click="resetForm()"></q-btn>
+      </div>
     </div>
-  <!-- </q-page> -->
 </template>
 
 <script>
@@ -32,7 +51,8 @@ export default {
           settings: {
             limitedTime: 20
           },
-          answerType: '單選'
+          answerType: '單選',
+          expanded: true
         }
       ]
     }
@@ -52,7 +72,8 @@ export default {
         settings: {
           times: 20
         },
-        answerType: '單選'
+        answerType: '單選',
+        expanded: true
       })
     },
     questionTitleChange (updateTitle, index) {
@@ -63,7 +84,12 @@ export default {
     },
     changeLimitedTime (limitedTime, index) {
       this.questionList[index - 1].settings.limitedTime = limitedTime
-      console.log('quesiotn:', this.questionList)
+    },
+    saveForm () {
+      // save
+    },
+    resetForm () {
+      // reset
     }
   }
 }
