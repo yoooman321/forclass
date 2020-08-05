@@ -2,7 +2,7 @@
   <div class="answer-type">
     <div class="select-type">
       <div class="title">答案類型:</div>
-      <q-select v-model="answerType" :options="options" label="答案類型" label-color="primary" outlined @blur="changeAnswerType"></q-select>
+      <q-select v-model="answerType" :options="options" label="答案類型" label-color="primary" outlined @input="changeAnswerType"></q-select>
     </div>
   </div>
 </template>
