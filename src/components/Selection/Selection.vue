@@ -1,7 +1,7 @@
 <template>
   <div class="answer-selection">
     <div class="answer-title">答案選項: (請勾選正確答案)</div>
-    <component :is="answer"></component>
+    <component :is="answer" :index="index"></component>
   </div>
 </template>
 <script>

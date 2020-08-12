@@ -1,9 +1,17 @@
 <template>
     <div class="new">
-      <div class="set" v-for="(question, index) in questionList" :key="index">
+      <div class="testName">
+        <q-input
+          outlined
+          v-model="examName"
+          label="考題名稱："
+          @blur="changeExamName(examName)"
+        ></q-input>
+      </div>
+      <div class="set" v-for="(question, index) in questions.questionList" :key="index">
         <div class="question-index">
-          <div>Question {{question.index}}
-            <span v-if="!question.expanded" class="question-title"> - {{ question.questionTitle }}</span>
+          <div>Question {{index + 1}}
+            <span v-if="!question.expanded" class="question-title"> - {{ quesionTitle }}</span>
           </div>
           <q-btn
             color="primary"
@@ -11,18 +19,18 @@
             flat
             size="lg"
             :icon="question.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
-            @click="question.expanded = !question.expanded"
+            @click="changeExpnaded(index)"
           ></q-btn>
         </div>
          <q-slide-transition>
            <div v-show="question.expanded">
-             <question :index="question.index" @changeTitle = "questionTitleChange"></question>
+             <question :index="index"></question>
               <div class="answer-title">答案區</div>
               <div class="answer-part">
-                <answer-type :index="question.index" @changeAnswerType = "changeAnswerType"></answer-type>
-                <setting :index="question.index" @changeLimitedTime = "changeLimitedTime"></setting>
+                <answer-type :index="index"></answer-type>
+                <setting :index="index"></setting>
               </div>
-              <selection :index="question.index" :answerType="question.answerType"></selection>
+              <selection :index="index" :answerType="question.answerType"></selection>
            </div>
          </q-slide-transition>
       </div>
@@ -39,22 +47,18 @@ import Question from '../../components/Question/Question'
 import AnswerType from '../../components/AnswerType/AnswerType'
 import Setting from '../../components/Setting/Setting'
 import Selection from '../../components/Selection/Selection'
+import { mapMutations } from 'vuex'
 export default {
   name: 'PageIndex',
+  computed: {
+    questions () {
+      return this.$store.state.exam
+    }
+  },
   data () {
     return {
-      qustionIndex: 1,
-      questionList: [
-        {
-          index: 1,
-          questionTitle: '',
-          settings: {
-            limitedTime: 20
-          },
-          answerType: '單選',
-          expanded: true
-        }
-      ]
+      examName: '',
+      quesionTitle: ''
     }
   },
   components: {
@@ -64,27 +68,7 @@ export default {
     Selection
   },
   methods: {
-    addQuestion () {
-      this.qustionIndex++
-      this.questionList.push({
-        index: this.qustionIndex,
-        questionTitle: '',
-        settings: {
-          times: 20
-        },
-        answerType: '單選',
-        expanded: true
-      })
-    },
-    questionTitleChange (updateTitle, index) {
-      this.questionList[index - 1].questionTitle = updateTitle
-    },
-    changeAnswerType (answerType, index) {
-      this.questionList[index - 1].answerType = answerType
-    },
-    changeLimitedTime (limitedTime, index) {
-      this.questionList[index - 1].settings.limitedTime = limitedTime
-    },
+    ...mapMutations(['addQuestion', 'changeExpnaded', 'changeExamName']),
     saveForm () {
       // save
     },

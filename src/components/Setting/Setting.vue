@@ -1,10 +1,18 @@
 <template>
   <div class="setting-part">
     <div class="title">答題設定：</div>
-    <q-input outlined v-model="limitedTime" label="答題秒數" suffix="秒" type="number" @blur="changeLimitedTime"></q-input>
+    <q-input
+      outlined
+      v-model="limitedTime"
+      label="答題秒數"
+      suffix="秒"
+      type="number"
+      @blur="changeLimitedTime([limitedTime, index])"
+    ></q-input>
   </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
 export default {
   props: {
     index: {
@@ -18,9 +26,7 @@ export default {
     }
   },
   methods: {
-    changeLimitedTime () {
-      this.$emit('changeLimitedTime', this.limitedTime, this.index)
-    }
+    ...mapMutations(['changeLimitedTime'])
   }
 }
 </script>

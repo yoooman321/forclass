@@ -1,11 +1,12 @@
 <template>
+<!-- 圖片部分尚未存入 （待查） -->
   <div class="question-part">
     <div class="title">
       <q-input
       outlined
       v-model="title"
       label="問題："
-      @blur="changeTitle"
+      @blur="questionTitleChange([title, index])"
     ></q-input>
     </div>
     <div class="question-image">
@@ -18,6 +19,7 @@
   </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
 export default {
   props: {
     index: {
@@ -32,9 +34,7 @@ export default {
     }
   },
   methods: {
-    changeTitle () {
-      this.$emit('changeTitle', this.title, this.index)
-    },
+    ...mapMutations(['questionTitleChange']),
     checkFileType (files) {
       return files.filter(file => file.type === 'image/png' || file.type === 'image/jpeg')
     },

@@ -25,18 +25,24 @@
   </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
 export default {
   props: {
+    index: {
+      type: Number,
+      required: true
+    }
   },
   data () {
     return {
-      selected: ''
+      selected: undefined
     }
   },
   methods: {
+    ...mapMutations(['changeAnswer']),
     onClick (val) {
       this.selected = val
-      this.$emit('setCorrectOption', val)
+      this.changeAnswer([val, this.index])
     }
   }
 }

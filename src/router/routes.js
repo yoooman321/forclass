@@ -8,6 +8,11 @@ const routes = [
       { path: '/old', component: () => import('pages/OldForm.vue') }
     ]
   },
+  {
+    path: '/start/:id',
+    name: 'Start',
+    component: () => import('pages/Start.vue')
+  },
 
   // Always leave this as last one,
   // but you can also remove it

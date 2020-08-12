@@ -2,11 +2,17 @@
   <div class="answer-type">
     <div class="select-type">
       <div class="title">答案類型:</div>
-      <q-select v-model="answerType" :options="options" label="答案類型" label-color="primary" outlined @input="changeAnswerType"></q-select>
+      <q-select
+        v-model="answerType"
+        :options="options" label="答案類型"
+        label-color="primary" outlined
+        @input="changeAnswerType([answerType,index])">
+      </q-select>
     </div>
   </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
 export default {
   props: {
     index: {
@@ -21,9 +27,7 @@ export default {
     }
   },
   methods: {
-    changeAnswerType () {
-      this.$emit('changeAnswerType', this.answerType, this.index)
-    }
+    ...mapMutations(['changeAnswerType'])
   }
 }
 </script>

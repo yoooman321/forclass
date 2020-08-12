@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import state from './module-example/state'
+import * as mutations from './module-example/mutations'
 // import example from './module-example'
 
 Vue.use(Vuex)
@@ -19,7 +20,8 @@ export default function (/* { ssrContext } */) {
     modules: {
       // example
     },
-
+    state,
+    mutations,
     // enable strict mode (adds overhead!)
     // for dev mode only
     strict: process.env.DEV
