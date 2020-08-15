@@ -17,8 +17,6 @@
 </template>
 <script>
 export default {
-  props: {
-  },
   data () {
     return {
       options: [
@@ -42,5 +40,4 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-@import './singleAnswer.styl';
 </style>
