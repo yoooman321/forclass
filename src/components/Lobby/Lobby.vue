@@ -1,23 +1,26 @@
 <template>
   <div>
-    <div>
-      <lobby :id="id"></lobby>
-      <play-list></play-list>
+    <div class="qrcode">
+      <div class="text">
+        掃描QR Code進入遊戲
+      </div>
+      <vue-qrcode width="200" :value="'http://localhost:8080/start/' + id "  />
+      <div class="text"> or  輸入網址：localhost:8080/play/{{ id }} </div>
+      <q-btn class="btn" size="lg" color="deep-purple-10">start it</q-btn>
     </div>
   </div>
 </template>
 <script>
-import PlayList from '../components/PlayerList/PlayList'
-import Lobby from '../components/Lobby/Lobby'
+import VueQrcode from 'vue-qrcode'
 export default {
-  data () {
-    return {
-      id: this.$route.params.id
+  props: {
+    id: {
+      type: String,
+      required: true
     }
   },
   components: {
-    PlayList,
-    Lobby
+    VueQrcode
   }
 }
 </script>
@@ -38,6 +41,4 @@ export default {
     position absolute
     right 2vh
     font-size 20px
-  .or
-    padding-left 2vh
 </style>
