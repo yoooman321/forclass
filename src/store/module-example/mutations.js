@@ -6,8 +6,8 @@ export function addQuestion (state) {
       limitedTime: 20
     },
     answerType: '單選',
-    answer: '',
-    expanded: true
+    expanded: true,
+    options: []
   })
 }
 export function questionTitleChange (state, [updateTitle, index]) {
@@ -20,11 +20,11 @@ export function changeAnswerType (state, [answerType, index]) {
   state.exam.questionList[index].answerType = answerType
 }
 export function changeLimitedTime (state, [limitedTime, index]) {
-  state.exam.questionList[index].limitedTime = limitedTime
+  state.exam.questionList[index].settings.limitedTime = limitedTime
 }
 export function changeExamName (state, examName) {
   state.exam.examName = examName
 }
-export function changeAnswer (state, [answer, index]) {
-  state.exam.questionList[index].answer = answer
+export function changeOptions (state, [options, index]) {
+  state.exam.questionList[index].options = options
 }

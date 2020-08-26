@@ -10,7 +10,7 @@
          />
       <q-item tag="label" v-ripple class="option">
         <q-item-section avatar>
-          <q-checkbox v-model="option.isAnswer" color="teal" @input="addAnswer()"/>
+          <q-checkbox v-model="option.isAnswer" color="teal" @input="setOptions()"/>
         </q-item-section>
         <q-item-section>
           <q-file
@@ -18,12 +18,13 @@
             v-model="option.file"
             label="請上傳檔案 (限 jpg, png)"
             :filter="checkFileType"
+            @input="setOptions()"
             @rejected="onRejected">
             <template v-slot:prepend>
               <q-icon name="attach_file"></q-icon>
             </template>
           </q-file>
-          <q-input v-else v-model="option.value" :dense="true">
+          <q-input v-else v-model="option.value" :dense="true" @input="setOptions()">
             <template v-slot:prepend>
               <q-icon name="keyboard_arrow_right"></q-icon>
             </template>
@@ -35,7 +36,14 @@
   </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
 export default {
+  props: {
+    questionIndex: {
+      type: Number,
+      required: true
+    }
+  },
   data () {
     return {
       types: ['文字', '圖片'],
@@ -47,12 +55,13 @@ export default {
     }
   },
   methods: {
-    addAnswer () {
-      console.log(this.options)
-      this.$emit('setCorrectOption', this.options)
+    ...mapMutations(['changeOptions']),
+    setOptions () {
+      this.changeOptions([JSON.parse(JSON.stringify(this.options)), this.questionIndex])
     },
     AddOption () {
-      this.options = [...this.options, { value: '', isAnswer: false }]
+      this.options = [...this.options, { value: '', isAnswer: false, type: '文字', file: null }]
+      this.setOptions()
     },
     checkFileType (files) {
       return files.filter(file => file.type === 'image/png' || file.type === 'image/jpeg')

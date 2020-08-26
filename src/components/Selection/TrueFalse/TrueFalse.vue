@@ -1,25 +1,17 @@
 <template>
   <div class="true-false">
     <q-item
+      v-for="(option, i) in options"
+      :key="`item-${i}`"
       clickable
       v-ripple
-      :active="selected === true"
-      @click="onClick(true)"
+      :active="option.isAnswer === true"
+      @click="onClick(i)"
       active-class="active"
     >
       <q-item-section side>
-        <q-icon name="radio_button_unchecked"></q-icon>
-      </q-item-section>
-    </q-item>
-    <q-item
-      clickable
-      v-ripple
-      :active="selected === false"
-      @click="onClick(false)"
-      active-class="active"
-    >
-      <q-item-section side>
-        <q-icon name="close"></q-icon>
+        <q-icon v-if="option.value" name="radio_button_unchecked"></q-icon>
+        <q-icon v-else name="close"></q-icon>
       </q-item-section>
     </q-item>
   </div>
@@ -28,21 +20,29 @@
 import { mapMutations } from 'vuex'
 export default {
   props: {
-    index: {
+    questionIndex: {
       type: Number,
       required: true
     }
   },
   data () {
     return {
-      selected: undefined
+      options: [{
+        value: true,
+        isAnswer: false
+      }, {
+        value: false,
+        isAnswer: false
+      }]
     }
   },
   methods: {
-    ...mapMutations(['changeAnswer']),
-    onClick (val) {
-      this.selected = val
-      this.changeAnswer([val, this.index])
+    ...mapMutations(['changeOptions']),
+    onClick (index) {
+      this.options.forEach((o, i) => {
+        o.isAnswer = i === index
+      })
+      this.changeOptions([JSON.parse(JSON.stringify(this.options)), this.questionIndex])
     }
   }
 }
