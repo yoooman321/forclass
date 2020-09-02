@@ -5,13 +5,12 @@
           outlined
           v-model="examName"
           label="考題名稱："
-          @blur="changeExamName(examName)"
         ></q-input>
       </div>
       <div class="set" v-for="(question, index) in questions.questionList" :key="index">
         <div class="question-index">
           <div>Question {{index + 1}}
-            <span v-if="!question.expanded" class="question-title"> - {{ quesionTitle }}</span>
+            <span v-if="!question.expanded" class="question-title"> - {{ question.questionTitle }}</span>
           </div>
           <q-btn
             color="primary"
@@ -53,12 +52,18 @@ export default {
   computed: {
     questions () {
       return this.$store.state.exam
+    },
+    examName: {
+      get () {
+        return this.questions.examName
+      },
+      set (value) {
+        this.changeExamName(value)
+      }
     }
   },
   data () {
     return {
-      examName: '',
-      quesionTitle: ''
     }
   },
   components: {
@@ -71,6 +76,7 @@ export default {
     ...mapMutations(['addQuestion', 'changeExpnaded', 'changeExamName']),
     saveForm () {
       // save
+      console.log(this.questions)
     },
     resetForm () {
       // reset

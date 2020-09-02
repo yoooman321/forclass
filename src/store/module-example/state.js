@@ -10,8 +10,8 @@ export default function () {
             limitedTime: 20
           },
           answerType: '單選',
-          answer: '',
-          expanded: true
+          expanded: true,
+          options: []
         }
       ]
     },
