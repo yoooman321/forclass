@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import OldExam from '../components/OldExam/OldExam'
+import OldExam from './OldExam/OldExam'
 export default {
   components: {
     OldExam

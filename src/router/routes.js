@@ -11,7 +11,7 @@ const routes = [
   {
     path: '/start/:id',
     name: 'Start',
-    component: () => import('pages/Start.vue')
+    component: () => import('pages/GameStart/Start.vue')
   },
 
   // Always leave this as last one,
