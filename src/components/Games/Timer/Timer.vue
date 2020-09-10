@@ -1,5 +1,6 @@
 <template>
 <div class="main">
+  <!-- <audio id="video" :src="music" muted></audio> -->
   <!-- <template v-if="!finished"> -->
   <template>
     <div class="time" :style="gradient">
@@ -16,7 +17,8 @@ export default {
       start: DateTime.local(),
       now: DateTime.local(),
       end: DateTime.local().plus({ seconds: 8 }),
-      tick: null
+      tick: null,
+      counted: false
     }
   },
   watch: {

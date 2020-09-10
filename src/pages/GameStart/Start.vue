@@ -4,7 +4,7 @@
     <!-- <audio autoplay loop :src="music" ref="au" muted> -->
       <!-- <source :src="music" type="audio/mpeg"> -->
     <!-- </audio> -->
-    <div v-if="started" class="start">
+    <div class="start" v-if="started">
       <question-part></question-part>
       <timer class="timer"></timer>
       <answers-part></answers-part>
@@ -16,6 +16,7 @@
       </transition>
     </div>
     <lobby v-if="lobby" :id="id" @playAudio = "play"></lobby>
+    <animation-transition v-if="transitions"></animation-transition>
   </div>
 </template>
 <script>
@@ -25,7 +26,9 @@ import AnswersPart from '../../components/Games/AnswersPart/AnswersPart'
 import Statistics from '../../components/Games/Statistics/Statistics'
 import Rank from '../../components/Games/Rank/Rank'
 import music from '../../assets/Tin_Spirit.mp3'
+import counted from '../../assets/counted.mp3'
 import Lobby from './Lobby'
+import AnimationTransition from './AnimationTransition'
 export default {
   data () {
     return {
@@ -35,7 +38,10 @@ export default {
       music,
       id: this.$route.params.id,
       started: false,
-      lobby: true
+      lobby: false,
+      transitions: true,
+      counted,
+      backGroundSound: new Audio(music)
     }
   },
   components: {
@@ -44,30 +50,25 @@ export default {
     AnswersPart,
     Statistics,
     Rank,
-    Lobby
+    Lobby,
+    AnimationTransition
   },
   methods: {
     randomBGColor () {
       console.log('ttt')
       return Math.floor(Math.random() * Math.floor(this.bgColor.length))
     },
-    // handleCanplay () {
-    //   this.$nextTick(() => {
-    //     this.$refs.au.play()
-    //   })
-    // }
     play () {
       this.lobby = false
       this.started = true
-      const myAudio = new Audio(this.music)
-      myAudio.play()
+    },
+    stopPlay () {
+      setTimeout(() => {
+        this.backGroundSound.pause()
+      }, 4000)
     }
   },
   mounted () {
-    // console.log('mm', this.music)
-    // const myAudio = new Audio(this.music)
-    // myAudio.play()
-    // this.handleCanplay()
     const self = this
     setTimeout(() => {
       self.timeout = true
@@ -75,6 +76,33 @@ export default {
     setTimeout(() => {
       this.ranktime = true
     }, 1000)
+  },
+  created () {
+    this.$bus.$on('playCountedSound', () => {
+      setTimeout(() => {
+        const myAudio = new Audio(this.counted)
+        myAudio.play()
+        this.stopPlay()
+      }, 3200)
+    })
+    this.$bus.$on('playBackgroundMusic', () => {
+      this.started = false
+      this.lobby = false
+      this.transitions = true
+      // setTimeout(() => {
+      //   this.transitions = false
+      //   this.started = true
+      // }, 3000)
+      // this.backGroundSound.play()
+    })
+    this.$bus.$on('changeState', () => {
+      this.started = true
+      this.transitions = false
+    })
+  },
+  beforeDestroy () {
+    this.$bus.$off('playCountedSound')
+    this.$bus.$off('playBackgroundMusic')
   }
 }
 </script>

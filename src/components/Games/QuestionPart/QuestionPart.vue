@@ -22,7 +22,8 @@ export default {
   },
   methods: {
     test () {
-      this.title = 'test2'
+      // this.title = 'test2'
+      this.$bus.$emit('playBackgroundMusic')
     }
   }
 }

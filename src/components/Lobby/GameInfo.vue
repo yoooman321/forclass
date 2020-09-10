@@ -6,7 +6,7 @@
       </div>
       <vue-qrcode  :value="'http://localhost:8080/start/' + id "  />
       <div class="text"> or  輸入網址：localhost:8080/play/{{ id }} </div>
-      <q-btn class="btn" size="lg" color="deep-purple-10">start it</q-btn>
+      <q-btn class="btn" size="lg" color="deep-purple-10" @click="play">start it</q-btn>
     </div>
   </div>
 </template>
@@ -21,6 +21,13 @@ export default {
   },
   components: {
     VueQrcode
+  },
+  methods: {
+    play () {
+      this.$emit('playAudio')
+      this.$bus.$emit('playBackgroundMusic')
+      this.$bus.$emit('playCountedSound')
+    }
   }
 }
 </script>

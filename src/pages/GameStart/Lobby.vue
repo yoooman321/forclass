@@ -2,7 +2,7 @@
   <div>
     <game-info :id="id"></game-info>
     <play-list></play-list>
-    <q-btn label="test" @click="play"></q-btn>
+    <!-- <q-btn label="test" @click="play"></q-btn> -->
   </div>
 </template>
 <script>
@@ -17,6 +17,8 @@ export default {
   methods: {
     play () {
       this.$emit('playAudio')
+      this.$bus.$emit('playBackgroundMusic')
+      // this.$bus.$emit('playCountedSound')
     }
   }
 }
