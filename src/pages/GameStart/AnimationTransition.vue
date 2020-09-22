@@ -3,7 +3,7 @@
     <!-- <transition> -->
       <!-- <div class="animate__animated animate__slideInRight"> -->
         <div class="title animate__animated animate__slideInRight">Question 1</div>
-        <div v-if="showTitle" class="counted animate__animated animate__zoomIn animate__infinite">{{counter}}</div>
+        <div v-if="showTitle" class="counted">{{counter}}</div>
         <!-- <div class="counted animate__animated animate__zoomIn animate__repeat-3">test</div> -->
         <!-- <div class="counted">2</div>
         <div class="counted">1</div>
@@ -25,13 +25,11 @@ export default {
     setTimeout(() => {
       this.showTitle = true
       this.counting()
-      // console.log('aa')
     }, 4000)
   },
   methods: {
     counting () {
-      const self = this
-      self.timer = setInterval(() => {
+      this.timer = setInterval(() => {
         this.counter--
       }, 1000)
     },
@@ -42,8 +40,8 @@ export default {
     }
   },
   watch: {
-    counter () {
-      if (this.counter === 0) {
+    counter (val) {
+      if (val === 0) {
         clearInterval(this.timer)
         this.counter = 'GO!'
         this.changeState()
@@ -57,33 +55,48 @@ export default {
   height: 100vh;
   width: 100vw;
   background: url('../../assets/bg.png');
+  background-size: 100vw 100vh;
+  background-repeat: no-repeat;
   position: relative;
+  overflow: hidden;
 }
 .title {
   text-align: center;
-  padding-top: 15vh;
-  font-size: 50px;
+  padding-top: 12vh;
+  font-size: 7vw;
   font-weight: bold;
 }
 .animate__animated.animate__slideInRight {
-  --animate-duration: 2s;
-  --animate-delay: 2s;
-}
-.animate__animated.animate__slideOutLeft {
-  --animate-duration: 2s;
-  --animate-delay: 6s;
+  animation-duration: 2s;
+  animation-delay: 1s;
 }
 .counted {
   position: absolute;
-  font-size: 50px;
-  left: 48%;
-  top: 30%;
+  width: 100%;
+  text-align: center;
+  font-size: 5.5vw;
+  left: 0;
+  top: 40%;
   font-weight: bold;
-  /* text-align: center; */
+  opacity: 0;
+  animation: zoom 1s ease-in-out 4;
 }
-.animate__animated.animate__zoomIn {
-  --animate-duration: 1s;
-  --animate-delay: 4s;
-  /* --animate-repeat: infinite; */
+@keyframes zoom{
+  0% {
+    transform: scale(1.0);
+    opacity: 0;
+  }
+  5% {
+    transform: scale(1.0);
+    opacity: 100%;
+  }
+  49% {
+    transform: scale(1.0);
+    opacity: 100%;
+  }
+  100% {
+    transform: scale(4.0);
+    opacity: 0;
+  }
 }
 </style>
