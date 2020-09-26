@@ -13,6 +13,11 @@ const routes = [
     name: 'Start',
     component: () => import('pages/Start.vue')
   },
+  {
+    path: '/play/:id',
+    name: 'Play',
+    component: () => import('pages/Student/Play.vue')
+  },
 
   // Always leave this as last one,
   // but you can also remove it
