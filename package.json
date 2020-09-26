@@ -11,15 +11,18 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "animate.css": "^4.1.1",
     "axios": "^0.18.1",
     "core-js": "^3.6.5",
+    "d3": "^6.1.1",
+    "luxon": "^1.25.0",
     "qrcode": "^1.4.4",
     "quasar": "^1.0.0",
     "vue-i18n": "^8.0.0",
     "vue-qrcode": "^0.3.3"
   },
   "devDependencies": {
-    "@quasar/app": "^2.0.0",
+    "@quasar/app": "^2.1.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
