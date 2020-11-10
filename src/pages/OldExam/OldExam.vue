@@ -2,7 +2,7 @@
   <div>
     <q-table
       title="我的考題"
-      :data="oldExamList"
+      :data="oldExamLists"
       :columns="columns"
       row-key="examID"
       :filter="filter"
@@ -38,7 +38,7 @@
   </div>
 </template>
 <script>
-import { mapMutations } from 'vuex'
+import { addCurrentExamData } from 'src/backend/index'
 export default {
   data () {
     return {
@@ -63,23 +63,27 @@ export default {
         field: 'actions',
         align: 'center'
       }],
-      filter: ''
+      filter: '',
+      getOldExamList: []
     }
   },
   computed: {
-    oldExamList () {
+    oldExamLists () {
       return this.$store.state.oldExamList
     }
   },
+  created () {
+    this.$store.dispatch('getExamList')
+  },
   methods: {
-    ...mapMutations(['saveCurrentExam']),
+    // ...mapMutations(['saveCurrentExam']),
     playIt (data) {
       // 1. store id into local storage (in case pressing refresh accidentally)
       // 2. put data in vuex (current exam)
-      this.saveCurrentExam(data)
-      const routeData = this.$router.resolve({ name: 'Start', params: { id: data.examID } })
+      // this.saveCurrentExam(data)
+      addCurrentExamData(data.examID, data)
+      const routeData = this.$router.resolve({ name: 'Start', params: { id: data.examID, examData: data } })
       window.open(routeData.href, '_blank')
-      // this.$router.push('/play/' + data.examID)
     },
     deleteItem (data) {
       // delete

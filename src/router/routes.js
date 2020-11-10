@@ -11,12 +11,18 @@ const routes = [
   {
     path: '/start/:id',
     name: 'Start',
-    component: () => import('pages/GameStart/Start.vue')
+    component: () => import('pages/Teacher/StartExam/StartExam.vue')
+    // component: () => import('pages/GameStart/Lobby.vue')
   },
   {
     path: '/play/:id',
     name: 'Play',
     component: () => import('pages/Student/Play.vue')
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('pages/Teacher/Login.vue')
   },
 
   // Always leave this as last one,

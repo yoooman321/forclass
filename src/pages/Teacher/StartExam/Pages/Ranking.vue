@@ -1,0 +1,43 @@
+<template>
+  <div class="ranking">
+    <h3 class="title">目前戰況</h3>
+    <rank></rank>
+    <div class="btn">
+       <q-btn color="primary" label="下一題" size="xl" @click="next"></q-btn>
+    </div>
+  </div>
+</template>
+<script>
+import Rank from 'src/components/Games/Rank/Rank'
+export default {
+  props: ['questionIndex'],
+  methods: {
+    next () {
+      this.$bus.$emit('saveCurrentQuestionToVuex')
+      this.$store.commit('changeTeacherPage', 'animation-transition')
+    }
+  },
+  components: {
+    Rank
+  }
+}
+</script>
+<style scoped>
+.ranking {
+  height: 100vh;
+  width: 100vw;
+  background: url('../../../../assets/rankingBG.jpg');
+  background-size: 100vw 100vh;
+  background-repeat: repeat;
+  position: relative;
+  overflow: hidden;
+}
+.title {
+  text-align: center;
+  font-weight: bold;
+}
+.btn {
+  margin-top: 2vh;
+  text-align: center;
+}
+</style>

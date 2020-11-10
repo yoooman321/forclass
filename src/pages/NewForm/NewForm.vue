@@ -47,6 +47,7 @@ import AnswerType from '../../components/AnswerType/AnswerType'
 import Setting from '../../components/Setting/Setting'
 import Selection from '../../components/Selection/Selection'
 import { mapMutations } from 'vuex'
+import { addQuesionToFirebase, addQuestionImageToFirebase } from 'src/backend/index'
 export default {
   name: 'PageIndex',
   computed: {
@@ -74,9 +75,13 @@ export default {
   },
   methods: {
     ...mapMutations(['addQuestion', 'changeExpnaded', 'changeExamName']),
-    saveForm () {
+    async saveForm () {
       // save
-      console.log(this.questions)
+      // console.log(this.questions)
+      const test = await addQuesionToFirebase()
+      await addQuestionImageToFirebase()
+      console.log('test: ', test)
+      // clear quesiontList
     },
     resetForm () {
       // reset

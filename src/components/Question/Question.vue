@@ -10,7 +10,9 @@
     ></q-input>
     </div>
     <div class="question-image">
-      <q-file v-model="img" label="插入問題圖片（選填）" outlined :filter="checkFileType" @rejected="onRejected">
+      <q-img :src="path"></q-img>
+      <q-btn label="test" @click="test"></q-btn>
+      <q-file v-model="img" label="插入問題圖片（選填）" outlined :filter="checkFileType" @rejected="onRejected" @input="quesionTitleImageChange([img, index])">
         <template v-slot:prepend>
           <q-icon name="attach_file"></q-icon>
         </template>
@@ -30,11 +32,13 @@ export default {
   data () {
     return {
       title: '',
-      img: null
+      img: null,
+      files: {},
+      path: ''
     }
   },
   methods: {
-    ...mapMutations(['questionTitleChange']),
+    ...mapMutations(['questionTitleChange', 'quesionTitleImageChange']),
     checkFileType (files) {
       return files.filter(file => file.type === 'image/png' || file.type === 'image/jpeg')
     },
@@ -43,6 +47,32 @@ export default {
         type: 'negative',
         message: '請上傳副檔名為 .png 或 .jpg 的檔案'
       })
+    },
+    test () {
+      // console.log('blur', this.img)
+      // console.log('img: ', this.img)
+      const file = this.img
+      console.log('file', file.name)
+      // this.files = this.img
+      const storageRef = this.$fb.storage().ref('test/' + file.name)
+      storageRef.put(file)
+        .then(res => {
+          console.log('yes: ', res)
+          // const url = this.$fb.storage().refFromURL('gs://for-class-ae5df.appspot.com/' + file.name)
+          storageRef.getDownloadURL()
+            .then(res => {
+              this.path = res
+              console.log('res: ', res)
+            })
+            .catch(err => {
+              console.log('err: ', err)
+            })
+          // console.log('url: ', url)
+          // console.log('stor: ', storageRef)
+        })
+        .catch(err => {
+          console.log('err: ', err)
+        })
     }
   }
 }

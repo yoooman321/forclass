@@ -1,37 +1,43 @@
 <template>
   <div class="ansPart">
     <div
-      v-for="(ans, index) in ansStyle"
+      v-for="(ans, index) in options"
       :key="index"
       class="answer"
-      :style="{backgroundColor: ans.bgColor}"
-      :class="{lastans: (index === ansStyle.length-1 && ansStyle.length % 2 === 1), isAnswer: (options[index].isAnswer === false && timesout)}"
+      :style="{backgroundColor: ansStyle[index].bgColor}"
+      :class="{lastans: (index === options.length-1 && options.length % 2 === 1), isAnswer: (ans.isAnswer === false && timeOut)}"
       >
-      <div class="selection">{{ans.options}}</div>
-      {{options[index].value}}
+      <div class="selection">{{ansStyle[index].number}}</div>
+      {{ans.value}}
     </div>
   </div>
 </template>
 <script>
 export default {
+  props: ['options'],
   data () {
     return {
       ansStyle: [
-        { options: '①', bgColor: 'green' },
-        { options: '②', bgColor: 'yellow' },
-        { options: '③', bgColor: 'blue' },
-        { options: '④', bgColor: 'red' },
-        { options: '④', bgColor: 'white' }],
-      options: [
-        { value: 'a', isAnswer: false, type: '文字', file: null },
-        { value: 'b', isAnswer: true, type: '文字', file: null },
-        { value: 'c', isAnswer: false, type: '文字', file: null },
-        { value: 'd', isAnswer: false, type: '文字', file: null },
-        { value: 'd', isAnswer: false, type: '文字', file: null }],
-      timesout: false
+        { number: '①', bgColor: 'green' },
+        { number: '②', bgColor: 'yellow' },
+        { number: '③', bgColor: 'blue' },
+        { number: '④', bgColor: 'red' },
+        { number: '④', bgColor: 'white' }]
+      // options: [
+      //   { value: 'a', isAnswer: false, type: '文字', file: null },
+      //   { value: 'b', isAnswer: true, type: '文字', file: null },
+      //   { value: 'c', isAnswer: false, type: '文字', file: null },
+      //   { value: 'd', isAnswer: false, type: '文字', file: null },
+      //   { value: 'd', isAnswer: false, type: '文字', file: null }],
     }
   },
+  mounted () {
+    console.log('options: ', this.options)
+  },
   computed: {
+    timeOut () {
+      return this.$store.state.timesOut
+    }
     // oddAns () {
     // return (this.ansStyle)
     // }
@@ -42,13 +48,13 @@ export default {
 .ansPart {
   display: flex;
   flex-wrap: wrap;
-  height: 50vh;
+  height: 45vh;
 }
 .answer{
   width: 50vw;
   /* margin: 1vh 1vw; */
   text-align: center;
-  font-size: 50px;
+  font-size: 2em;
   background-color: yellow;
   border: 0.5px solid black;
   /* border-radius: 1vh; */

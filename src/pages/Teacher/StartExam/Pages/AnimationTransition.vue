@@ -1,26 +1,24 @@
 <template>
-  <div class="cutTo">
-    <!-- <transition> -->
-      <!-- <div class="animate__animated animate__slideInRight"> -->
-        <div class="title animate__animated animate__slideInRight">Question 1</div>
+  <div class="animation-transition">
+        <div class="animate__animated animate__slideInRight">
+          <div class="title ">Question {{ questionIndex }}</div>
+          <div class="context"> {{ questionTitle }}</div>
+        </div>
         <div v-if="showTitle" class="counted">{{counter}}</div>
-        <!-- <div class="counted animate__animated animate__zoomIn animate__repeat-3">test</div> -->
-        <!-- <div class="counted">2</div>
-        <div class="counted">1</div>
-        <div class="counted">GO</div> -->
-      <!-- </div> -->
-    <!-- </transition> -->
   </div>
 </template>
 <script>
+import { updateCurrentQuestion } from 'src/backend/index'
 export default {
   data () {
     return {
       showTitle: false,
       counter: 3,
-      timer: null
+      timer: null,
+      questionTitle: this.$store.state.currentQuestion.questionTitle
     }
   },
+  props: ['id', 'questionIndex'],
   mounted () {
     setTimeout(() => {
       this.showTitle = true
@@ -35,7 +33,8 @@ export default {
     },
     changeState () {
       setTimeout(() => {
-        this.$bus.$emit('changeState')
+        updateCurrentQuestion(this.id, this.$store.state.currentQuestion)
+        this.$store.commit('changeTeacherPage', 'question')
       }, 1000)
     }
   },
@@ -51,10 +50,10 @@ export default {
 }
 </script>
 <style scoped>
-.cutTo {
+.animation-transition {
   height: 100vh;
   width: 100vw;
-  background: url('../../assets/bg.png');
+  background: url('../../../../assets/bg.png');
   background-size: 100vw 100vh;
   background-repeat: no-repeat;
   position: relative;
@@ -62,13 +61,17 @@ export default {
 }
 .title {
   text-align: center;
-  padding-top: 12vh;
+  padding-top: 5vh;
   font-size: 7vw;
   font-weight: bold;
 }
 .animate__animated.animate__slideInRight {
   animation-duration: 2s;
   animation-delay: 1s;
+}
+.context {
+  text-align: center;
+  font-size: 2rem;
 }
 .counted {
   position: absolute;
