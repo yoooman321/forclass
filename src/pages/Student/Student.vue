@@ -1,0 +1,121 @@
+<template>
+  <q-layout view="hHh lpR fFf">
+    <q-header bordered class="bg-black text-white" >
+      <q-toolbar>
+        <q-toolbar-title>
+          <div class="header">
+            <div style="text-align: center; font-weight: bold">{{ headerTitle }}</div>
+            <q-btn v-if="whichPage === 'answer'" label="答案確定" color="secondary" class="confirm-btn" @click="sentAnswer" :disable="answerButtonDisabled"></q-btn>
+          </div>
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-header>
+    <q-page-container>
+        <component
+          :waitForTimeOut="waitForTimeOut"
+          :class="whichPage !== 'final' ? 'content' : 'final'"
+          :is="whichPage"
+          @setNickName="setNickName"
+          @setAnswerButtonDisabled="setAnswerButtonDisabled"
+          :myResult="myResult"
+          @setAddScore="setAddScore"
+        >
+        </component>
+    </q-page-container>
+
+    <q-footer bordered class="bg-white text-black">
+      <q-toolbar>
+        <q-toolbar-title>
+          <div class="footer">
+            <div style="padding: 0 3vw; font-weight: bold;"> {{ nickName }} </div>
+            <div style="padding: 0 3vw; font-weight: bold; background-color: pink; border-radius: 1vh;">分數: {{ myScore }}</div>
+          </div>
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-footer>
+  </q-layout>
+</template>
+<script>
+import Lobby from 'src/components/Student/Lobby'
+import AnimationTransition from 'src/components/Student/AnimationTransition'
+import Answer from 'src/components/Student/Answer'
+import Ranking from 'src/components/Student/Ranking'
+import Final from 'src/components/Student/Final'
+export default {
+  data () {
+    return {
+      id: this.$route.params.id,
+      whichPage: 'lobby',
+      nickName: '',
+      headerTitle: '進入遊戲',
+      myScore: 1000,
+      waitForTimeOut: false,
+      answerButtonDisabled: true,
+      myResult: true,
+      interval: false,
+      addScore: 0
+    }
+  },
+  components: {
+    Lobby,
+    AnimationTransition,
+    Answer,
+    Ranking,
+    Final
+  },
+  watch: {
+    whichPage () {
+      this.waitForTimeOut = false
+      this.answerButtonDisabled = true
+    },
+    addScore () {
+      // if (this.addScore === this.myScore) return
+      window.setTimeout(() => {
+        this.interval = window.setInterval(() => {
+          if (this.myScore !== this.addScore) {
+            this.myScore++
+          }
+          if (this.addScore === this.myScore) {
+            clearInterval(this.interval)
+          }
+        }, 20)
+      }, 2000)
+    }
+  },
+  methods: {
+    setNickName (name) {
+      this.nickName = name
+    },
+    sentAnswer () {
+      this.waitForTimeOut = true
+    },
+    setAnswerButtonDisabled () {
+      this.answerButtonDisabled = false
+    },
+    setAddScore (score) {
+      this.addScore = this.myScore + score
+    }
+  }
+}
+</script>
+<style scoped>
+.footer {
+  display: flex;
+  justify-content: space-between;
+}
+.confirm-btn {
+  position: absolute;
+  right: 5px;
+  top: 8px;
+}
+.content {
+  width: 100vw;
+  height: calc(100vh - 100px);
+  background-color: #B1EDE8;
+}
+.final {
+  width: 100vw;
+  height: calc(100vh - 100px);
+  background-color: #009FB7;
+}
+</style>

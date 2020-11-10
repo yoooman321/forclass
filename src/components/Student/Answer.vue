@@ -1,0 +1,146 @@
+<template>
+  <div>
+    <div class="answerSelection">
+      <div
+        v-for="(option, index) in options"
+        :key="index"
+        :style="{backgroundColor: answerOptions[index].bgColor}"
+        class="answers"
+        @click="chooseAnswer(index)"
+      >
+        <div>{{ answerOptions[index].options }}</div>
+        <q-icon v-if="myAnswer.includes(index)" class="material-icons text-green done" style="font-size: 5rem;">
+          done
+        </q-icon>
+      </div>
+    </div>
+    <div class="loading" v-if="waitForTimeOut">
+      <img :src="loading" />
+      <div style="text-align: center; font-size: 2rem; font-weight: bold;">等待解答...</div>
+    </div>
+  </div>
+</template>
+<script>
+import loading from 'src/assets/loading.gif'
+export default {
+  props: {
+    waitForTimeOut: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
+      answerOptions: [
+        { options: '①', bgColor: 'green' },
+        { options: '②', bgColor: 'yellow' },
+        { options: '③', bgColor: 'blue' },
+        { options: '④', bgColor: 'red' },
+        { options: '④', bgColor: 'white' }
+      ],
+      options: [
+        { value: 'a', isAnswer: false, type: '文字', file: null },
+        { value: 'b', isAnswer: true, type: '文字', file: null },
+        { value: 'c', isAnswer: true, type: '文字', file: null },
+        { value: 'd', isAnswer: false, type: '文字', file: null },
+        { value: 'd', isAnswer: false, type: '文字', file: null }
+      ],
+      answer: -1,
+      loading,
+      myAnswer: [],
+      answerType: '多選',
+      corret: true
+    }
+  },
+  methods: {
+    chooseAnswer (index) {
+      const elements = document.getElementsByClassName('answers')
+      if (this.answerType === '單選' || this.answerType === '是非') {
+        if (this.myAnswer.length < 1) {
+          this.myAnswer.push(index)
+          elements[index].style.border = '3px outset #805B0C'
+          elements[index].style.opacity = '0.7'
+          this.$emit('setAnswerButtonDisabled')
+          return
+        }
+        const notAnswer = elements[this.myAnswer[0]]
+        notAnswer.style.border = 'none'
+        notAnswer.style.opacity = '1'
+        elements[index].style.border = '3px outset #805B0C'
+        elements[index].style.opacity = '0.7'
+        this.myAnswer.splice(0, 1)
+        this.myAnswer.push(index)
+        this.$emit('setAnswerButtonDisabled')
+        return
+      }
+      if (!this.myAnswer.includes(index)) {
+        elements[index].style.border = '3px outset #805B0C'
+        elements[index].style.opacity = '0.7'
+        this.myAnswer.push(index)
+        this.$emit('setAnswerButtonDisabled')
+        return
+      }
+      elements[index].style.border = 'none'
+      elements[index].style.opacity = '1'
+      const findIndex = this.myAnswer.indexOf(index)
+      this.myAnswer.splice(findIndex, 1)
+      this.$emit('setAnswerButtonDisabled')
+    },
+    getResult () {
+      this.myAnswer.forEach(ele => {
+        if (!this.options[ele].isAnswer) this.corret = false
+      })
+      const option = this.options.filter((item, index) => {
+        return !this.myAnswer.includes(index)
+      })
+      const checkUnchooseAnswer = option.some(item => item.isAnswer)
+      if (checkUnchooseAnswer) this.corret = false
+      console.log('corre: ', this.corret)
+    }
+  },
+  watch: {
+    waitForTimeOut () {
+      this.getResult()
+    }
+  }
+}
+</script>
+<style scoped>
+.answerSelection {
+  display: flex;
+  flex-wrap: wrap;
+  height: calc(100vh - 100px);
+}
+.answers {
+  width: 50vw;
+  position: relative;
+  text-align: center;
+  font-size: 2rem;
+}
+.not-choose-answer {
+  opacity: 0.3;
+}
+.done {
+  position: absolute;
+  top: 5vh;
+  left: 15vw;
+}
+.loading {
+  height: calc(100vh - 100px);
+  position: fixed;
+  top: 50px;
+  width: 100vw;
+  background-color: white;
+  opacity: .6;
+}
+.loading > img {
+  /* height: 50%; */
+  padding-top: 15vh;
+  width: 100%;
+}
+</style>
+<style>
+.q-toolbar {
+  height: 50px;
+}
+</style>

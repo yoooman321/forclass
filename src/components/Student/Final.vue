@@ -15,7 +15,7 @@ export default {
   data () {
     return {
       score: 100,
-      rank: 4,
+      rank: 3,
       rankOne,
       rankTwo,
       rankThree,
@@ -43,9 +43,6 @@ export default {
 </script>
 <style scoped>
 .final-result {
-  padding-top: 10vh;
-  background-color: #009FB7;
-  height: calc(100vh - 100px);
   color: white;
   font-weight: bold;
   text-align: center;
@@ -53,12 +50,13 @@ export default {
 }
 .title {
   font-size: 2rem;
+  padding-top: 2vh;
   -webkit-text-fill-color: white;
   -webkit-text-stroke: 1px black;
   /* color: #FED766; */
 }
 .content {
-  margin-top:5vh;
+  padding-top:5vh;
 }
 img {
   margin-top: 5vh;

@@ -16,7 +16,7 @@ const routes = [
   {
     path: '/play/:id',
     name: 'Play',
-    component: () => import('pages/Student/Play.vue')
+    component: () => import('pages/Student/Student.vue')
   },
 
   // Always leave this as last one,
