@@ -4,8 +4,9 @@
   </div>
 </template>
 <script>
-import OldExam from './OldExam/OldExam'
+import OldExam from 'src/components/Teacher/OldExam/OldExam'
 export default {
+  name: 'OldForm',
   components: {
     OldExam
   }

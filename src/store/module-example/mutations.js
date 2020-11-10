@@ -1,7 +1,7 @@
 export function addQuestion (state) {
   state.exam.questionList.push({
     questionTitle: '',
-    questionTitleImage: '',
+    questionTitleImage: null,
     settings: {
       limitedTime: 20
     },
@@ -10,17 +10,26 @@ export function addQuestion (state) {
     options: []
   })
 }
-export function questionTitleChange (state, [updateTitle, index]) {
-  state.exam.questionList[index].questionTitle = updateTitle
+export function setQuesiontList (state, [value, index, objectName]) {
+  switch (objectName) {
+    case 'questionTitle':
+      state.exam.questionList[index].answerType = value
+      break
+    case 'questionTitleImage':
+      state.exam.questionList[index].questionTitleImage = value
+      break
+    case 'answerType':
+      state.exam.questionList[index].answerType = value
+      break
+    case 'limitedTime':
+      state.exam.questionList[index].settings.limitedTime = value
+      break
+    default:
+      break
+  }
 }
 export function changeExpnaded (state, index) {
   state.exam.questionList[index].expanded = !state.exam.questionList[index].expanded
-}
-export function changeAnswerType (state, [answerType, index]) {
-  state.exam.questionList[index].answerType = answerType
-}
-export function changeLimitedTime (state, [limitedTime, index]) {
-  state.exam.questionList[index].settings.limitedTime = limitedTime
 }
 export function changeExamName (state, examName) {
   state.exam.examName = examName
@@ -30,8 +39,12 @@ export function changeOptions (state, [options, index]) {
 }
 export function saveCurrentExam (state, data) {
   state.currentExam = data
-  // console.log('state: ', state.currentExam)
 }
 export function deleteExam (state, index) {
   state.oldExamList = state.oldExamList.filter(ele => ele.examID !== index)
+}
+export function resetQuestion (state) {
+  state.exam.examName = ''
+  state.exam.questionList = []
+  addQuestion(state)
 }

@@ -5,7 +5,7 @@ export default function () {
       questionList: [
         {
           questionTitle: '',
-          questionTitleImage: '',
+          questionTitleImage: null,
           settings: {
             limitedTime: 20
           },
@@ -22,7 +22,7 @@ export default function () {
         questionList: [
           {
             questionTitle: 'abc',
-            questionTitleImage: '',
+            questionTitleImage: null,
             settings: {
               limitedTime: 20
             },
@@ -38,7 +38,7 @@ export default function () {
         questionList: [
           {
             questionTitle: '',
-            questionTitleImage: '',
+            questionTitleImage: null,
             settings: {
               limitedTime: 20
             },

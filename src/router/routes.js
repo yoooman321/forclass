@@ -4,8 +4,13 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/NewForm/NewForm.vue') },
-      { path: '/old', component: () => import('pages/OldForm.vue') }
+      { path: '', component: () => import('pages/Teacher/NewForm/NewForm.vue') },
+      { path: '/old', component: () => import('pages/Teacher/OldExam/OldForm.vue') },
+      {
+        path: '/edit/:id',
+        name: 'Edit',
+        component: () => import('pages/Teacher/OldExam/EditExam.vue')
+      }
     ]
   },
   {
@@ -16,9 +21,8 @@ const routes = [
   {
     path: '/play/:id',
     name: 'Play',
-    component: () => import('pages/Student/Student.vue')
+    component: () => import('pages/Student/Game/Student.vue')
   },
-
   // Always leave this as last one,
   // but you can also remove it
   {

@@ -3,10 +3,12 @@
   <div class="question-part">
     <div class="title">
       <q-input
-      outlined
-      v-model="title"
-      label="問題："
-      @blur="questionTitleChange([title, index])"
+        ref="title"
+        outlined
+        v-model="title"
+        label="問題："
+        :rules="[val => val && val.length > 0 || '請輸入問題']"
+        @blur="questionTitleChange([title, index])"
     ></q-input>
     </div>
     <div class="question-image">
@@ -25,12 +27,22 @@ export default {
     index: {
       type: Number,
       required: true
+    },
+    validateCheck: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       title: '',
       img: null
+    }
+  },
+  watch: {
+    validateCheck () {
+      this.$refs.title.validate()
+      this.$emit('returnQuestionValidate', this.$refs.title.hasError)
     }
   },
   methods: {

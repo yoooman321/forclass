@@ -25,7 +25,7 @@
           <q-td key="actions" :props="props">
             <q-btn color="primary" label="編輯" @click="editItem(props.row)" size=sm style="margin: 1vh;"></q-btn>
              <q-btn color="secondary" label="開始玩"  @click="playIt(props.row)" size=sm style="margin: 1vh;"></q-btn>
-            <q-btn color="negative" label="刪除"  @click="showDeleteDialog(props.row)" size=sm style="margin: 1vh;"></q-btn>
+            <q-btn color="negative" label="刪除"  @click="deleteItem(props.row)" size=sm style="margin: 1vh;"></q-btn>
           </q-td>
         </q-tr>
         <q-dialog v-model="deleteDialog">
@@ -35,6 +35,9 @@
         </q-dialog>
       </template>
     </q-table>
+    <div style="float: right; margin-right: 5px; color: red; font-weight: bold;">
+      ※存在超過三個月的考題會自動刪除
+    </div>
   </div>
 </template>
 <script>
@@ -82,12 +85,13 @@ export default {
       // this.$router.push('/play/' + data.examID)
     },
     deleteItem (data) {
-      // delete
-      // console.log(data)
-      this.$store.dispatch('deleteItem', data.examID)
+      // const index = this.data.indexOf(item);
+      confirm('確定刪除?') &&
+        this.$store.dispatch('deleteItem', data.examID)
     },
-    showDeleteDialog () {
-      this.deleteDialog = true
+    editItem (data) {
+      console.log('data: ', data)
+      this.$router.push('/edit/' + data.examID)
     }
   }
 }
