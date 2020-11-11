@@ -1,24 +1,40 @@
 <template>
-  <div>
-    <div class="rank-title">最快排行榜</div>
-    <div class="num">
+  <div class="rank">
+    <div class="test">
+      <div>
+        <div class="score">500</div>
+        <div class="player-name">player2</div>
+        <div class="ranking no2"></div>
+      </div>
+      <div>
+        <div class="score">1000</div>
+        <div class="player-name">player1</div>
+        <div class="ranking no1"></div>
+      </div>
+      <div>
+        <div class="score">300</div>
+        <div class="player-name">player3</div>
+        <div class="ranking no3"></div>
+      </div>
+    </div>
+    <!-- <div class="num">
       <img class="ranking" :src="Rank01" >
       <transition name = "fade">
-        <div v-if="rank01show" class="playername">Player1</div>
+        <div v-show="rank01show" class="playername">Player1</div>
       </transition>
-    </div>
-    <div class="num">
+    </div> -->
+    <!-- <div class="num">
       <img class="ranking" :src="Rank02" >
       <transition name = "slide">
-        <div v-if="rank02show" class="playername">Player2</div>
+        <div v-show="rank02show" class="playername">Player2</div>
       </transition>
-    </div>
-    <div class="num">
+    </div> -->
+    <!-- <div class="num">
       <img class="ranking" :src="Rank03" >
       <transition name="slide">
-        <div v-if="rank03show" class="playername">Player3</div>
+        <div v-show="rank03show" class="playername">Player3</div>
       </transition>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -50,6 +66,48 @@ export default {
 }
 </script>
 <style scoped>
+.test {
+  display:flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-top: 5vh;
+  border-bottom: 1px solid black;
+}
+.no1 {
+  height: 40vh;
+  background: url('../../../assets/ranking01.png');
+}
+.no2 {
+  height: 25vh;
+  background: url('../../../assets/ranking02.png');
+}
+.no3 {
+  height: 16vh;
+  background: url('../../../assets/ranking03.png');
+
+}
+.ranking {
+  width: 10vw;
+  background-repeat: no-repeat;
+  background-size: 9vw;
+  background-position-x: center;
+  background-position-y: 1vh;
+  background-color: #009FB7;
+  border: 1px solid black;
+}
+.player-name {
+  font-size: 2em;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 1vh;
+}
+.score {
+  color: white;
+  text-align: center;
+}
+.rank {
+  margin: auto 0;
+}
 .rank-title {
   /* text-align: center; */
   font-weight: bold;
@@ -60,17 +118,16 @@ export default {
   margin: 2vh 0;
   align-items: center;
   align-self: center;
+  justify-content: center;
 }
-.ranking {
-  width: 8vw;
-}
+
 .playername {
-  width: 8vw;
   text-align: center;
   font-weight: bold;
   align-self: center;
   align-items: center;
-  font-size: 1.5vw;
+  font-size: 3em;
+  margin-left: 4vw;
 }
 .slide-enter {
   /* transform: translateY(20px); */

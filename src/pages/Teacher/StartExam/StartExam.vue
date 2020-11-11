@@ -1,0 +1,62 @@
+<template>
+  <div>
+    <component :is="whichPage" :id="id" :questionIndex="questionIndex"></component>
+  </div>
+</template>
+<script>
+import Lobby from './Pages/Lobby'
+import AnimationTransition from './Pages/AnimationTransition'
+import Question from './Pages/Question'
+import GameFinish from './Pages/GameFinish'
+import Ranking from './Pages/Ranking'
+import { getCurrentExamData, setCurrentQuestion, getImageUrl } from 'src/backend/index'
+import { mapMutations } from 'vuex'
+export default {
+  components: {
+    Lobby,
+    AnimationTransition,
+    Question,
+    GameFinish,
+    Ranking
+  },
+  data () {
+    return {
+      id: this.$route.params.id,
+      examData: {},
+      questionIndex: 0,
+      titleImageUrl: ''
+    }
+  },
+  computed: {
+    whichPage () {
+      return this.$store.state.teatcherPage
+    }
+  },
+  mounted () {
+    this.setCurrentExamToVuex()
+    setCurrentQuestion(this.id, {})
+    this.$bus.$on('saveCurrentQuestionToVuex', () => {
+      this.saveCurrentQuestionToVuex()
+    })
+  },
+  methods: {
+    ...mapMutations(['saveCurrentExam', 'saveCurrentQuesion']),
+    async setCurrentExamToVuex () {
+      this.examData = await getCurrentExamData(this.id)
+      this.saveCurrentExam(this.examData)
+    },
+    async saveCurrentQuestionToVuex () {
+      if (this.questionIndex < this.examData.questionList.length) {
+        this.saveCurrentQuesion(this.questionIndex)
+        if (this.$store.state.currentQuestion.questionTitleImage) {
+          this.titleImageUrl = await getImageUrl('questions', this.$store.state.currentQuestion.questionTitleImage)
+          this.$store.commit('updateTitleImage', this.titleImageUrl)
+        }
+        this.questionIndex++
+        return
+      }
+      this.$store.commit('changeTeacherPage', 'game-finish')
+    }
+  }
+}
+</script>

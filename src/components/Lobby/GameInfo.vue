@@ -4,9 +4,8 @@
       <div class="text">
         掃描QR Code進入遊戲
       </div>
-      <vue-qrcode  :value="'http://localhost:8080/start/' + id "  />
+      <vue-qrcode  :value="location + id "  />
       <div class="text"> or  輸入網址：localhost:8080/play/{{ id }} </div>
-      <q-btn class="btn" size="lg" color="deep-purple-10" @click="play">start it</q-btn>
     </div>
   </div>
 </template>
@@ -19,8 +18,17 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      loacation: document.location
+      // currentExamID: this.$store.state.currentExam
+    }
+  },
   components: {
     VueQrcode
+  },
+  mounted () {
+    this.location = document.location
   },
   methods: {
     play () {

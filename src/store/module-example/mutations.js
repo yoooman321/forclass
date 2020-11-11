@@ -28,6 +28,11 @@ export function setQuesiontList (state, [value, index, objectName]) {
       break
   }
 }
+export function quesionTitleImageChange (state, [updateTitleImage, index]) {
+  state.exam.questionList[index].questionTitleImage = updateTitleImage.name
+  state.questionImageList.push(updateTitleImage)
+  // console.log('exam: ', state.exam)
+}
 export function changeExpnaded (state, index) {
   state.exam.questionList[index].expanded = !state.exam.questionList[index].expanded
 }
@@ -36,6 +41,7 @@ export function changeExamName (state, examName) {
 }
 export function changeOptions (state, [options, index]) {
   state.exam.questionList[index].options = options
+  console.log('aaaa: ', state.exam.questionList[index].options[0])
 }
 export function saveCurrentExam (state, data) {
   state.currentExam = data
@@ -47,4 +53,24 @@ export function resetQuestion (state) {
   state.exam.examName = ''
   state.exam.questionList = []
   addQuestion(state)
+}
+export function getExamList (state, data) {
+  state.oldExamList.push(data)
+}
+export function saveCurrentQuesion (state) {
+  state.currentQuestion = state.currentExam.questionList[state.questionIndex]
+  state.questionIndex++
+}
+export function changeTimeOutFlag (state, flag) {
+  state.timesOut = flag
+}
+export function changeTeacherPage (state, pageName) {
+  state.teatcherPage = pageName
+}
+export function examIsFinished (state) {
+  if (state.questionIndex < state.currentExam.questionList.length) return false
+  return true
+}
+export function updateTitleImage (state, url) {
+  state.questionTitleImage = url
 }

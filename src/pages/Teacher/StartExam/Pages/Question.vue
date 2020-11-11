@@ -1,39 +1,37 @@
 <template>
   <div>
-
     <!-- <audio autoplay loop :src="music" ref="au" muted> -->
       <!-- <source :src="music" type="audio/mpeg"> -->
     <!-- </audio> -->
-    <div class="start" v-if="started">
-      <question-part></question-part>
-      <timer class="timer"></timer>
-      <answers-part></answers-part>
+      <question-part :title="currentQuestion.questionTitle"></question-part>
+      <timer class="timer" :time="currentQuestion.settings.limitedTime"></timer>
+      <answers-part :options="currentQuestion.options"></answers-part>
       <transition name="slide">
-        <statistics class="statistics" v-if="timeout"></statistics>
+        <statistics class="statistics" v-if="timeOut"></statistics>
       </transition>
-      <transition name="slide">
+      <div class="button">
+        <q-btn v-if="timeOut" color="secondary" label="目前戰況" size="xl" @click="next"></q-btn>
+     </div>
+      <!-- <transition name="slide">
         <rank v-if="ranktime" class="rank"></rank>
-      </transition>
-    </div>
-    <lobby v-if="lobby" :id="id" @playAudio = "play"></lobby>
-    <animation-transition v-if="transitions"></animation-transition>
+      </transition> -->
   </div>
 </template>
 <script>
-import Timer from '../../components/Games/Timer/Timer'
-import QuestionPart from '../../components/Games/QuestionPart/QuestionPart'
-import AnswersPart from '../../components/Games/AnswersPart/AnswersPart'
-import Statistics from '../../components/Games/Statistics/Statistics'
-import Rank from '../../components/Games/Rank/Rank'
-import music from '../../assets/Tin_Spirit.mp3'
-import counted from '../../assets/counted.mp3'
-import Lobby from './Lobby'
-import AnimationTransition from './AnimationTransition'
+import Timer from 'src/components/Games/Timer/Timer'
+import QuestionPart from 'src/components/Games/QuestionPart/QuestionPart'
+import AnswersPart from 'src/components/Games/AnswersPart/AnswersPart'
+import Statistics from 'src/components/Games/Statistics/Statistics'
+// import Rank from 'src/components/Games/Rank/Rank'
+import music from 'src/assets/Tin_Spirit.mp3'
+import counted from 'src/assets/counted.mp3'
+// import Lobby from './Lobby'
+// import AnimationTransition from './AnimationTransition'
 export default {
+  props: ['questionIndex'],
   data () {
     return {
       bgColor: ['#FEEFE5', '#DDE7C7', '#FF8CC6', '#FEF9FF', '#C8EAD3', '#BAD7F2', '#FFA5AB', '#FFC857'],
-      timeout: false,
       ranktime: false,
       music,
       id: this.$route.params.id,
@@ -41,17 +39,23 @@ export default {
       lobby: false,
       transitions: true,
       counted,
-      backGroundSound: new Audio(music)
+      backGroundSound: new Audio(music),
+      currentQuestion: this.$store.state.currentQuestion
+    }
+  },
+  computed: {
+    timeOut () {
+      return this.$store.state.timesOut
     }
   },
   components: {
     QuestionPart,
     Timer,
     AnswersPart,
-    Statistics,
-    Rank,
-    Lobby,
-    AnimationTransition
+    Statistics
+    // Rank
+    // Lobby,
+    // AnimationTransition
   },
   methods: {
     randomBGColor () {
@@ -66,16 +70,19 @@ export default {
       setTimeout(() => {
         this.backGroundSound.pause()
       }, 4000)
+    },
+    next () {
+      if (this.questionIndex < this.$store.state.currentExam.questionList.length) {
+        this.$store.commit('changeTeacherPage', 'ranking')
+      } else {
+        this.$bus.$emit('saveCurrentQuestionToVuex')
+      }
+      // this.$bus.$emit('playBackgroundMusic')
     }
   },
   mounted () {
-    const self = this
-    setTimeout(() => {
-      self.timeout = true
-    }, 2000)
-    setTimeout(() => {
-      this.ranktime = true
-    }, 1000)
+    this.imgUrl = this.titleImageUrl
+    console.log('props: ', this.titleImageUrl)
   },
   created () {
     this.$bus.$on('playCountedSound', () => {
@@ -143,5 +150,10 @@ export default {
   to {
     transform: translateY(0);
   }
+}
+.button {
+  position: absolute;
+  top: 25vh;
+  right: 3vw;
 }
 </style>

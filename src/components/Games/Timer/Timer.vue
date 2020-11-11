@@ -1,5 +1,5 @@
 <template>
-<div class="main">
+<div class="main" v-if="!finished">
   <!-- <audio id="video" :src="music" muted></audio> -->
   <!-- <template v-if="!finished"> -->
   <template>
@@ -12,11 +12,12 @@
 <script>
 import { DateTime, Duration } from 'luxon'
 export default {
+  props: ['time'],
   data () {
     return {
       start: DateTime.local(),
       now: DateTime.local(),
-      end: DateTime.local().plus({ seconds: 8 }),
+      end: DateTime.local().plus({ seconds: this.time }),
       tick: null,
       counted: false
     }
@@ -25,6 +26,7 @@ export default {
     now () {
       if (this.finished) {
         clearInterval(this.tick)
+        this.$store.commit('changeTimeOutFlag', true)
       }
     }
   },
@@ -60,6 +62,7 @@ export default {
     }
   },
   mounted () {
+    this.$store.commit('changeTimeOutFlag', false)
     this.tick = setInterval(() => {
       this.now = DateTime.local()
     }, 10)

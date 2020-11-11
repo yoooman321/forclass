@@ -4,42 +4,47 @@
       {{title}}
     </div>
     <div>
-      <img class="title-img" :src="img">
-    </div>
-    <div class="button">
-      <q-btn color="secondary" label="next" size="xl" @click="test"></q-btn>
+      <img class="title-img" v-if="url" :src="url">
     </div>
   </div>
 </template>
 <script>
-import pigg from '../../../assets/ikea.png'
+// import { getImageUrl } from 'src/backend/index'
 export default {
+  props: ['title'],
   data () {
     return {
-      title: 'test',
-      img: pigg
+      url: this.$store.state.questionTitleImage
     }
   },
-  methods: {
-    test () {
-      // this.title = 'test2'
-      this.$bus.$emit('playBackgroundMusic')
+  computed: {
+    timeOUt () {
+      return this.$store.state.timesOut
     }
   }
+  // methods: {
+  //   async getUrl () {
+  //     this.titleImageUrl = await getImageUrl('questions', this.titleImage)
+  //     console.log('titleImageUrl', this.titleImageUrl)
+  //   }
+  // }
 }
 </script>
 <style lang="stylus" scoped>
 .question-part
   text-align: center;
   font-size: 6vh;
-  height: 50vh;
+  height: 55vh;
   position: relative;
   // border-bottom 1px solid black;
 
 .title {
   /* border-bottom: 1px solid black; */
+  width: 70vw;
   font-weight: bold;
   padding-top: 1vh;
+  text-align: center;
+  margin: 0 auto;
 }
 .noImg {
   padding-top: 25vh;
@@ -49,10 +54,5 @@ export default {
   height: 35vh;
   // width: 50vw
   max-width 50vw;
-}
-.button {
-  position: absolute;
-  bottom: 10vh;
-  right: 7vw;
 }
 </style>
