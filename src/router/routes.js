@@ -3,6 +3,7 @@ const routes = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
+    meta: { requiresAuth: true },
     children: [
       { path: '', component: () => import('pages/Teacher/NewForm/NewForm.vue') },
       { path: '/old', component: () => import('pages/Teacher/OldExam/OldForm.vue') },
@@ -16,25 +17,40 @@ const routes = [
   {
     path: '/start/:id',
     name: 'Start',
-    component: () => import('pages/Teacher/StartExam/StartExam.vue')
+    component: () => import('pages/Teacher/StartExam/StartExam.vue'),
+    meta: { requiresAuth: true }
     // component: () => import('pages/GameStart/Lobby.vue')
   },
   {
     path: '/play/:id',
     name: 'Play',
-    component: () => import('pages/Student/Game/Student.vue')
+    component: () => import('pages/Student/Game/Student.vue'),
+    meta: { requiresAuth: false }
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('pages/Teacher/Login.vue')
+    component: () => import('pages/Teacher/Login.vue'),
+    meta: { requiresAuth: false }
   },
-
+  {
+    path: '/room',
+    name: 'Room',
+    component: () => import('pages/Student/Room/Room.vue'),
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/notExist',
+    name: 'NotExist',
+    component: () => import('pages/Student/Game/NotExist.vue'),
+    meta: { requiresAuth: false }
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
     path: '*',
-    component: () => import('pages/Error404.vue')
+    component: () => import('pages/Error404.vue'),
+    meta: { requiresAuth: false }
   }
 ]
 

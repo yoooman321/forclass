@@ -34,7 +34,8 @@ export default {
     changeState () {
       setTimeout(() => {
         updateCurrentQuestion(this.id, this.$store.state.currentQuestion)
-        this.$store.commit('changeTeacherPage', 'question')
+        this.$store.dispatch('changePage', { examID: this.id, studentPage: 'answer', teacherPage: 'question' })
+        // this.$store.commit('changeTeacherPage', 'question')
       }, 1000)
     }
   },

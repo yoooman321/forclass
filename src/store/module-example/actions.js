@@ -1,7 +1,8 @@
 import { db } from 'src/boot/serverConnection'
-export function deleteItem (context, index) {
-  // axios delete firebase's data
-  context.commit('deleteExam', index)
+import { deleteExam, setWhichPage } from 'src/backend/index'
+export async function deleteItem (context, index) {
+  const deleteSuccess = await deleteExam(index)
+  if (deleteSuccess) context.commit('deleteExam', index)
 }
 export function getExamList (context) {
   const exam = db.collection('questions')
@@ -27,4 +28,9 @@ export function changeCurrentQuesiont (context) {
   console.log('ifi: ', isFinished)
   // if (isFinished)
   isFinished ? context.commit('saveCurrentQuesion') : context.commit('changeTeacherPage', 'game-finish')
+}
+export async function changePage (context, { examID, studentPage, teacherPage }) {
+  console.log('ee: ', examID, studentPage, teacherPage)
+  setWhichPage(examID, studentPage)
+  context.commit('changeTeacherPage', teacherPage)
 }

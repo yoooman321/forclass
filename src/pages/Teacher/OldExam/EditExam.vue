@@ -43,7 +43,8 @@ export default {
   },
   mounted () {
     this.questions = this.oldExamList.find((item) => {
-      return item.examID === parseInt(this.$route.params.id)
+      console.log('item: ', item)
+      return item.examID === this.$route.params.id
     })
     this.examName = this.questions.examName
   },

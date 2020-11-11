@@ -23,6 +23,7 @@
 <script>
 import QuestionSet from 'src/components/Teacher/NewExam/QuestionSet/QuestionSet'
 import { mapMutations } from 'vuex'
+import { addQuesionToFirebase, addQuestionImageToFirebase } from 'src/backend/index'
 export default {
   name: 'PageIndex',
   computed: {
@@ -49,7 +50,7 @@ export default {
   },
   methods: {
     ...mapMutations(['addQuestion', 'changeExamName', 'resetQuestion']),
-    saveForm () {
+    async saveForm () {
       if (this.avoidDoubleClick) return
       this.validateCheck = false
       this.$bus.$emit('validateCheck')
@@ -63,6 +64,9 @@ export default {
         })
         return
       }
+      const test = await addQuesionToFirebase()
+      await addQuestionImageToFirebase()
+      console.log('test: ', test)
       // add firebase api
       this.avoidDoubleClick = false
     },

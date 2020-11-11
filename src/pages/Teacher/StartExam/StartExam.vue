@@ -55,7 +55,7 @@ export default {
         this.questionIndex++
         return
       }
-      this.$store.commit('changeTeacherPage', 'game-finish')
+      this.$store.dispatch('changePage', { examID: this.id, studentPage: 'final', teacherPage: 'game-finish' })
     }
   }
 }

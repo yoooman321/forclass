@@ -39,6 +39,10 @@ export function addCurrentExamData (examID, examData) {
       console.log('err: ', err)
     })
 }
+export function setWhichPage (examID, pageName) {
+  db.collection('whichPage').doc(examID).set({ page: pageName })
+    .then(() => console.log('done'))
+}
 export function getCurrentExamData (examID) {
   return db.collection('currentExam').doc(examID).get()
     .then(ele => {
@@ -85,7 +89,7 @@ export function getImageUrl (path, fileName) {
       console.log('err', err)
     })
 }
-export function deleteExam (examID) {
+export function deleteCurrentExam (examID) {
   db.collection('currentExam').doc(String(examID)).delete()
     .then(() => {
       console.log('delete successfully!')
@@ -96,4 +100,11 @@ export function deleteQuestion (examID) {
     .then(() => {
       console.log('delete successfully!')
     })
+}
+export function deleteExam (examID) {
+  db.collection('questions').doc(String(examID)).delete()
+    .then(() => {
+      return true
+    })
+    .catch(err => console.log('err: ', err))
 }

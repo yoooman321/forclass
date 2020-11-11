@@ -19,6 +19,7 @@
           @setAnswerButtonDisabled="setAnswerButtonDisabled"
           :myResult="myResult"
           @setAddScore="setAddScore"
+          :currentQuestion="currentQuestion"
         >
         </component>
     </q-page-container>
@@ -41,6 +42,7 @@ import AnimationTransition from 'src/components/Student/AnimationTransition'
 import Answer from 'src/components/Student/Answer'
 import Ranking from 'src/components/Student/Ranking'
 import Final from 'src/components/Student/Final'
+import { db } from 'src/boot/serverConnection'
 export default {
   data () {
     return {
@@ -53,7 +55,8 @@ export default {
       answerButtonDisabled: true,
       myResult: true,
       interval: false,
-      addScore: 0
+      addScore: 0,
+      currentQuestion: {}
     }
   },
   components: {
@@ -81,6 +84,25 @@ export default {
         }, 20)
       }, 2000)
     }
+  },
+  mounted () {
+    const question = db.collection('currentExam')
+    let checkExam = false
+    question.onSnapshot(res => {
+      res.forEach(doc => {
+        if (doc) checkExam = true
+      })
+      if (!checkExam) {
+        this.$router.push('/notExist')
+        return
+      }
+      const page = db.collection('whichPage')
+      page.onSnapshot(res => {
+        res.forEach(doc => {
+          this.whichPage = doc.data().page
+        })
+      })
+    })
   },
   methods: {
     setNickName (name) {

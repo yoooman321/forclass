@@ -55,6 +55,10 @@ export function resetQuestion (state) {
   addQuestion(state)
 }
 export function getExamList (state, data) {
+  const findDuplicate = state.oldExamList.find((item) => {
+    return item.examID === data.examID
+  })
+  if (findDuplicate) return
   state.oldExamList.push(data)
 }
 export function saveCurrentQuesion (state) {

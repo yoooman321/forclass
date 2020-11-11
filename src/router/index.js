@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
+import { auth } from 'src/boot/serverConnection'
 import routes from './routes'
 
 Vue.use(VueRouter)
@@ -25,6 +25,21 @@ export default function (/* { store, ssrContext } */) {
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE
   })
-
+  Router.beforeEach((to, from, next) => {
+    // 如果 router 轉跳的頁面需要驗證 requiresAuth: true
+    if (to.matched.some(record => {
+      return record.meta.requiresAuth
+    })) {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          next()
+        } else {
+          next({ path: '/login' })
+        }
+      })
+    } else {
+      next()
+    }
+  })
   return Router
 }

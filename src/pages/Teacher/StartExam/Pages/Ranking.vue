@@ -11,10 +11,16 @@
 import Rank from 'src/components/Games/Rank/Rank'
 export default {
   props: ['questionIndex'],
+  data () {
+    return {
+      id: this.$route.params.id
+    }
+  },
   methods: {
     next () {
       this.$bus.$emit('saveCurrentQuestionToVuex')
-      this.$store.commit('changeTeacherPage', 'animation-transition')
+      this.$store.dispatch('changePage', { examID: this.id, studentPage: 'animation-transition', teacherPage: 'animation-transition' })
+      // this.$store.commit('changeTeacherPage', 'animation-transition')
     }
   },
   components: {

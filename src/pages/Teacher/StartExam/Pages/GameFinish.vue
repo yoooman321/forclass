@@ -9,13 +9,14 @@
 </template>
 <script>
 import Rank from 'src/components/Games/Rank/Rank'
-import { deleteExam, deleteQuestion } from 'src/backend/index'
+import { deleteCurrentExam, deleteQuestion } from 'src/backend/index'
 export default {
   props: ['questionIndex', 'id'],
   methods: {
     next () {
-      deleteExam(this.id)
+      deleteCurrentExam(this.id)
       deleteQuestion(this.id)
+      window.close()
     }
   },
   components: {

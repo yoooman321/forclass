@@ -73,8 +73,10 @@ export default {
     },
     next () {
       if (this.questionIndex < this.$store.state.currentExam.questionList.length) {
-        this.$store.commit('changeTeacherPage', 'ranking')
+        this.$store.dispatch('changePage', { examID: this.id, studentPage: 'ranking', teacherPage: 'ranking' })
+        // this.$store.commit('changeTeacherPage', 'ranking')
       } else {
+        console.log('over')
         this.$bus.$emit('saveCurrentQuestionToVuex')
       }
       // this.$bus.$emit('playBackgroundMusic')

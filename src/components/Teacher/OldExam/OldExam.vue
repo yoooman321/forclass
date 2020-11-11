@@ -86,6 +86,7 @@ export default {
       // this.saveCurrentExam(data)
       addCurrentExamData(data.examID, data)
       const routeData = this.$router.resolve({ name: 'Start', params: { id: data.examID, examData: data } })
+      this.$store.dispatch('changePage', { examID: data.examID, studentPage: 'lobby', teacherPage: 'lobby' })
       window.open(routeData.href, '_blank')
     },
     deleteItem (data) {
