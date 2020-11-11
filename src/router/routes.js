@@ -36,7 +36,7 @@ const routes = [
   {
     path: '/room',
     name: 'Room',
-    component: () => import('pages/Student/Room/Room.vue'),
+    component: () => import('pages/Student/Game/Room.vue'),
     meta: { requiresAuth: false }
   },
   {

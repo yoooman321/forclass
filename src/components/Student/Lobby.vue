@@ -36,6 +36,7 @@
 <script>
 import welcome from 'src/assets/welcome.png'
 import time from 'src/assets/time.png'
+import { db } from 'src/boot/serverConnection'
 export default {
   props: ['nickName'],
   data () {
@@ -44,15 +45,44 @@ export default {
       name: '',
       welcome,
       notFillNickName: true,
-      time
+      time,
+      avoidDoubleRequest: true
     }
+  },
+  created () {
+    this.$bus.$on('changeView', (obj) => {
+      this.notFillNickName = obj.bool
+      this.name = obj.name
+    })
+  },
+  beforeDestroy () {
+    this.$bus.$off('changeView')
   },
   methods: {
     enterGame () {
       this.$refs.nickName.validate()
       if (this.$refs.nickName.hasError) return
-      this.$emit('setNickName', this.name)
-      this.notFillNickName = false
+      if (!this.avoidDoubleRequest) return
+      this.avoidDoubleRequest = false
+      const newID = Math.floor(Math.random() * 1000000)
+      db.collection('player').doc(String(newID)).set({
+        playerName: this.name,
+        score: 0,
+        answerTime: 0,
+        answer: []
+      })
+        .then(() => {
+          this.$emit('setNickName', this.name)
+          localStorage.setItem('playerID', newID)
+          this.notFillNickName = false
+        })
+        .catch(() => {
+          this.$q.notify({
+            message: '請再試一次',
+            type: 'warning'
+          })
+        })
+      this.avoidDoubleRequest = true
     }
   }
 

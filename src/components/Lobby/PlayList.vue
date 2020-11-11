@@ -10,6 +10,7 @@
   </div>
 </template>
 <script>
+import { db } from 'src/boot/serverConnection'
 export default {
   data () {
     return {
@@ -17,9 +18,12 @@ export default {
     }
   },
   mounted () {
-    for (let i = 0; i < 20; i++) {
-      this.playerlist.push('player' + i)
-    }
+    const player = db.collection('player')
+    player.onSnapshot(res => {
+      res.forEach(data => {
+        if (!this.playerlist.includes(data.data().playerName)) this.playerlist.push(data.data().playerName)
+      })
+    })
   }
 }
 </script>

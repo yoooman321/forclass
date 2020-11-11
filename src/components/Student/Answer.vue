@@ -2,7 +2,7 @@
   <div>
     <div class="answerSelection">
       <div
-        v-for="(option, index) in options"
+        v-for="(option, index) in currentQuestion.options"
         :key="index"
         :style="{backgroundColor: answerOptions[index].bgColor}"
         class="answers"
@@ -27,6 +27,9 @@ export default {
     waitForTimeOut: {
       type: Boolean,
       default: false
+    },
+    currentQuestion: {
+      type: Object
     }
   },
   data () {
@@ -38,24 +41,25 @@ export default {
         { options: '④', bgColor: 'red' },
         { options: '④', bgColor: 'white' }
       ],
-      options: [
-        { value: 'a', isAnswer: false, type: '文字', file: null },
-        { value: 'b', isAnswer: true, type: '文字', file: null },
-        { value: 'c', isAnswer: true, type: '文字', file: null },
-        { value: 'd', isAnswer: false, type: '文字', file: null },
-        { value: 'd', isAnswer: false, type: '文字', file: null }
-      ],
+      // options: [
+      //   { value: 'a', isAnswer: false, type: '文字', file: null },
+      //   { value: 'b', isAnswer: true, type: '文字', file: null },
+      //   { value: 'c', isAnswer: true, type: '文字', file: null },
+      //   { value: 'd', isAnswer: false, type: '文字', file: null },
+      //   { value: 'd', isAnswer: false, type: '文字', file: null }
+      // ],
       answer: -1,
       loading,
       myAnswer: [],
       answerType: '多選',
-      corret: true
+      corret: true,
+      timeOut: true
     }
   },
   methods: {
     chooseAnswer (index) {
       const elements = document.getElementsByClassName('answers')
-      if (this.answerType === '單選' || this.answerType === '是非') {
+      if (this.currentQuestion.answerType === '單選' || this.currentQuestion.answerType === '是非') {
         if (this.myAnswer.length < 1) {
           this.myAnswer.push(index)
           elements[index].style.border = '3px outset #805B0C'
@@ -87,10 +91,11 @@ export default {
       this.$emit('setAnswerButtonDisabled')
     },
     getResult () {
+      console.log('myAns: ', this.myAnswer)
       this.myAnswer.forEach(ele => {
-        if (!this.options[ele].isAnswer) this.corret = false
+        if (!this.currentQuestion.options[ele].isAnswer) this.corret = false
       })
-      const option = this.options.filter((item, index) => {
+      const option = this.currentQuestion.options.filter((item, index) => {
         return !this.myAnswer.includes(index)
       })
       const checkUnchooseAnswer = option.some(item => item.isAnswer)
@@ -100,6 +105,8 @@ export default {
   },
   watch: {
     waitForTimeOut () {
+      console.log('watch')
+      console.log('waitForTimeOut: ', this.waitForTimeOut)
       this.getResult()
     }
   }

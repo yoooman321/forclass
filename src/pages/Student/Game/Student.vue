@@ -1,4 +1,5 @@
 <template>
+<!-- v-if="showPage"  -->
   <q-layout view="hHh lpR fFf">
     <q-header bordered class="bg-black text-white" >
       <q-toolbar>
@@ -47,7 +48,7 @@ export default {
   data () {
     return {
       id: this.$route.params.id,
-      whichPage: 'lobby',
+      whichPage: 'answer',
       nickName: '',
       headerTitle: '進入遊戲',
       myScore: 1000,
@@ -56,7 +57,8 @@ export default {
       myResult: true,
       interval: false,
       addScore: 0,
-      currentQuestion: {}
+      currentQuestion: {},
+      showPage: false
     }
   },
   components: {
@@ -86,29 +88,50 @@ export default {
     }
   },
   mounted () {
-    const question = db.collection('currentExam')
-    let checkExam = false
+    // this.$q.loading.show()
+    const question = db.collection('currentQuesion')
     question.onSnapshot(res => {
       res.forEach(doc => {
-        if (doc) checkExam = true
+        this.currentQuestion = doc.data()
       })
-      if (!checkExam) {
-        this.$router.push('/notExist')
-        return
-      }
-      const page = db.collection('whichPage')
-      page.onSnapshot(res => {
-        res.forEach(doc => {
-          this.whichPage = doc.data().page
-        })
-      })
+      console.log('ddd: ', this.currentQuestion)
     })
+    // const exam = db.collection('currentExam')
+    // let checkExam = false
+    // exam.onSnapshot(res => {
+    //   res.forEach(doc => {
+    //     console.log(doc.data())
+    //     if (doc.data().examID === this.id) checkExam = true
+    //   })
+    //   if (!checkExam) {
+    //     this.$q.loading.hide()
+    //     this.$router.push('/notExist')
+    //     return
+    //   }
+    //   const playerID = localStorage.getItem('playerID')
+    //   if (!playerID) return
+    //   db.collection('player').doc(String(playerID)).get()
+    //     .then(ele => {
+    //       this.nickName = ele.data().playerName
+    //       this.myScore = ele.data().score
+    //       this.$bus.$emit('changeView', { bool: false, name: this.nickName })
+    //     })
+    //   const page = db.collection('whichPage')
+    //   page.onSnapshot(res => {
+    //     res.forEach(doc => {
+    //       this.whichPage = doc.data().page
+    //     })
+    //   })
+    //   this.showPage = true
+    //   this.$q.loading.hide()
+    // })
   },
   methods: {
     setNickName (name) {
       this.nickName = name
     },
     sentAnswer () {
+      console.log('se')
       this.waitForTimeOut = true
     },
     setAnswerButtonDisabled () {

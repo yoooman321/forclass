@@ -85,6 +85,7 @@ export default {
       // 2. put data in vuex (current exam)
       // this.saveCurrentExam(data)
       addCurrentExamData(data.examID, data)
+      // deletePlayer()
       const routeData = this.$router.resolve({ name: 'Start', params: { id: data.examID, examData: data } })
       this.$store.dispatch('changePage', { examID: data.examID, studentPage: 'lobby', teacherPage: 'lobby' })
       window.open(routeData.href, '_blank')

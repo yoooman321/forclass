@@ -11,6 +11,7 @@ import rankOne from 'src/assets/rankOne.png'
 import rankTwo from 'src/assets/rankTwo.png'
 import rankThree from 'src/assets/rankThree.png'
 import rankOthers from 'src/assets/rankOthers.png'
+import { db } from 'src/boot/serverConnection'
 export default {
   data () {
     return {
@@ -37,6 +38,14 @@ export default {
       default:
         this.rankImage = this.rankOthers
         break
+    }
+    this.deletePlayerInfo()
+  },
+  methods: {
+    deletePlayerInfo () {
+      const playerID = localStorage.getItem('playerID')
+      db.collection('player').doc(String(playerID)).delete()
+      localStorage.removeItem('playerID')
     }
   }
 }

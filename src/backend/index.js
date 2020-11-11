@@ -95,6 +95,11 @@ export function deleteCurrentExam (examID) {
       console.log('delete successfully!')
     })
 }
+export function deletePlayer () {
+  db.collection('player').delete()
+    .then(() => console.log('dleeee'))
+    .catch(err => console.log('err: ', err))
+}
 export function deleteQuestion (examID) {
   db.collection('currentQuesion').doc(String(examID)).delete()
     .then(() => {
