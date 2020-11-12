@@ -12,25 +12,20 @@ export function getExamList (context) {
         examID: doc.id,
         ...doc.data()
       })
-      // data.push(
-      //   {
-      //     examID: doc.id,
-      //     ...doc.data()
-      //   }
-      // )
-      // console.log('aaaa: ', doc.id, doc.data())
     })
   })
-  // context.commit('getExamList', data)
 }
-export function changeCurrentQuesiont (context) {
+export function changecurrentQuestiont (context) {
   const isFinished = context.commit('examIsFinished')
-  console.log('ifi: ', isFinished)
-  // if (isFinished)
-  isFinished ? context.commit('saveCurrentQuesion') : context.commit('changeTeacherPage', 'game-finish')
+  isFinished ? context.commit('savecurrentQuestion') : context.commit('changeTeacherPage', 'game-finish')
 }
 export async function changePage (context, { examID, studentPage, teacherPage }) {
-  console.log('ee: ', examID, studentPage, teacherPage)
   setWhichPage(examID, studentPage)
   context.commit('changeTeacherPage', teacherPage)
+}
+export function changeTimeOutFlag (context, flag) {
+  context.commit('changeTimeOutFlag', flag)
+  window.setTimeout(() => {
+    context.commit('changeStaticFlag', flag)
+  }, 1000)
 }

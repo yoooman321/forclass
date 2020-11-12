@@ -96,7 +96,6 @@ export default {
         this.$store.dispatch('deleteItem', data.examID)
     },
     editItem (data) {
-      console.log('data: ', data)
       this.$router.push('/edit/' + data.examID)
     }
   }

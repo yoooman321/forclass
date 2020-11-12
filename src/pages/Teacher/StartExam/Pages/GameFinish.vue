@@ -1,7 +1,7 @@
 <template>
   <div class="ranking">
     <h3 class="title">最終結果</h3>
-    <rank></rank>
+    <rank :players="players"></rank>
     <div class="btn">
        <q-btn color="primary" label="結束" size="xl" @click="next"></q-btn>
     </div>
@@ -11,7 +11,11 @@
 import Rank from 'src/components/Games/Rank/Rank'
 import { deleteCurrentExam, deleteQuestion } from 'src/backend/index'
 export default {
-  props: ['questionIndex', 'id'],
+  props: {
+    playerInfo: {
+      type: Array
+    }
+  },
   methods: {
     next () {
       deleteCurrentExam(this.id)

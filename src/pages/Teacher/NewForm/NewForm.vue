@@ -6,7 +6,7 @@
           outlined
           v-model="examName"
           label="考題名稱："
-          :rules="[val => val || '請輸入考題名稱']"
+          :rules="[val => val && val.length > 0 || '請輸入考題名稱']"
         ></q-input>
       </div>
       <div v-for="(question, index) in questions.questionList" :key="'aa'+index">
@@ -23,7 +23,7 @@
 <script>
 import QuestionSet from 'src/components/Teacher/NewExam/QuestionSet/QuestionSet'
 import { mapMutations } from 'vuex'
-import { addQuesionToFirebase, addQuestionImageToFirebase } from 'src/backend/index'
+import { addQuestionImageToFirebase, addQuesionToFirebase } from 'src/backend/index'
 export default {
   name: 'PageIndex',
   computed: {
@@ -64,10 +64,14 @@ export default {
         })
         return
       }
-      const test = await addQuesionToFirebase()
-      await addQuestionImageToFirebase()
-      console.log('test: ', test)
-      // add firebase api
+      // 驗證過後:
+      this.$q.loading.show({ message: '新增中，請稍等...' })
+      const finalQuestionList = await addQuestionImageToFirebase()
+      const finalExam = { ...this.questions }
+      finalExam.questionList = this.clearUselessData(finalQuestionList)
+      // need add notify
+      await addQuesionToFirebase(finalExam)
+      this.$q.loading.hide()
       this.avoidDoubleClick = false
     },
     resetForm () {
@@ -76,6 +80,15 @@ export default {
     },
     getValidate (check) {
       if (check) this.validateCheck = true
+    },
+    clearUselessData (data) {
+      data.forEach(ele => {
+        delete ele.questionTitleImage
+        ele.options.forEach(item => {
+          delete item.file
+        })
+      })
+      return data
     }
   }
 }

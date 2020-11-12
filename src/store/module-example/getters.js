@@ -7,3 +7,6 @@ export function questionImageList (state) {
 export function answerImageList (state) {
   return state.answerImageList
 }
+export function questionList (state) {
+  return state.exam.questionList
+}

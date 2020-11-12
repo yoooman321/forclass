@@ -13,7 +13,7 @@ export function addQuestion (state) {
 export function setQuesiontList (state, [value, index, objectName]) {
   switch (objectName) {
     case 'questionTitle':
-      state.exam.questionList[index].answerType = value
+      state.exam.questionList[index].questionTitle = value
       break
     case 'questionTitleImage':
       state.exam.questionList[index].questionTitleImage = value
@@ -31,7 +31,6 @@ export function setQuesiontList (state, [value, index, objectName]) {
 export function quesionTitleImageChange (state, [updateTitleImage, index]) {
   state.exam.questionList[index].questionTitleImage = updateTitleImage.name
   state.questionImageList.push(updateTitleImage)
-  // console.log('exam: ', state.exam)
 }
 export function changeExpnaded (state, index) {
   state.exam.questionList[index].expanded = !state.exam.questionList[index].expanded
@@ -41,7 +40,6 @@ export function changeExamName (state, examName) {
 }
 export function changeOptions (state, [options, index]) {
   state.exam.questionList[index].options = options
-  console.log('aaaa: ', state.exam.questionList[index].options[0])
 }
 export function saveCurrentExam (state, data) {
   state.currentExam = data
@@ -61,12 +59,18 @@ export function getExamList (state, data) {
   if (findDuplicate) return
   state.oldExamList.push(data)
 }
-export function saveCurrentQuesion (state) {
+export function savecurrentQuestion (state) {
   state.currentQuestion = state.currentExam.questionList[state.questionIndex]
   state.questionIndex++
 }
 export function changeTimeOutFlag (state, flag) {
   state.timesOut = flag
+  window.setTimeout(() => {
+    changeStaticFlag(state, flag)
+  }, 2000)
+}
+export function changeStaticFlag (state, flag) {
+  state.showStatic = flag
 }
 export function changeTeacherPage (state, pageName) {
   state.teatcherPage = pageName

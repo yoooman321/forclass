@@ -8,7 +8,10 @@
       :class="{lastans: (index === options.length-1 && options.length % 2 === 1), isAnswer: (ans.isAnswer === false && timeOut)}"
       >
       <div class="selection">{{ansStyle[index].number}}</div>
-      {{ans.value}}
+      <div v-if="ans.type === '文字'"> {{ans.value}} </div>
+      <div v-else>
+        <img class="answer-img" :src="ans.imageUrl">
+      </div>
     </div>
   </div>
 </template>
@@ -17,30 +20,13 @@ export default {
   props: ['options'],
   data () {
     return {
-      ansStyle: [
-        { number: '①', bgColor: 'green' },
-        { number: '②', bgColor: 'yellow' },
-        { number: '③', bgColor: 'blue' },
-        { number: '④', bgColor: 'red' },
-        { number: '④', bgColor: 'white' }]
-      // options: [
-      //   { value: 'a', isAnswer: false, type: '文字', file: null },
-      //   { value: 'b', isAnswer: true, type: '文字', file: null },
-      //   { value: 'c', isAnswer: false, type: '文字', file: null },
-      //   { value: 'd', isAnswer: false, type: '文字', file: null },
-      //   { value: 'd', isAnswer: false, type: '文字', file: null }],
+      ansStyle: this.$store.state.optionListSetting
     }
-  },
-  mounted () {
-    console.log('options: ', this.options)
   },
   computed: {
     timeOut () {
       return this.$store.state.timesOut
     }
-    // oddAns () {
-    // return (this.ansStyle)
-    // }
   }
 }
 </script>
@@ -72,5 +58,9 @@ export default {
 .isAnswer {
   opacity: 0.1;
   /* background-color: black; */
+}
+.answer-img {
+  height: 100%;
+  max-height: 15vh;
 }
 </style>

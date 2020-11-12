@@ -1,7 +1,7 @@
 <template>
   <div class="ranking">
     <h3 class="title">目前戰況</h3>
-    <rank></rank>
+    <rank :players="players"></rank>
     <div class="btn">
        <q-btn color="primary" label="下一題" size="xl" @click="next"></q-btn>
     </div>
@@ -10,17 +10,34 @@
 <script>
 import Rank from 'src/components/Games/Rank/Rank'
 export default {
-  props: ['questionIndex'],
+  props: {
+    questionIndex: {
+      type: Number
+    },
+    playerInfo: {
+      type: Array
+    }
+  },
   data () {
     return {
       id: this.$route.params.id
     }
   },
+  computed: {
+    players () {
+      return this.playerInfo
+    }
+  },
+  mounted () {
+    this.orderPlayerByScore()
+  },
   methods: {
+    orderPlayerByScore () {
+      this.players.sort((a, b) => (a.score > b.score) ? -1 : ((b.score > a.score) ? 1 : 0))
+    },
     next () {
       this.$bus.$emit('saveCurrentQuestionToVuex')
       this.$store.dispatch('changePage', { examID: this.id, studentPage: 'animation-transition', teacherPage: 'animation-transition' })
-      // this.$store.commit('changeTeacherPage', 'animation-transition')
     }
   },
   components: {

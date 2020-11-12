@@ -2,39 +2,21 @@
   <div class="rank">
     <div class="test">
       <div>
-        <div class="score">500</div>
-        <div class="player-name">player2</div>
+        <div class="score">{{ players[1].score }}</div>
+        <div class="player-name">{{ players[1].playerName }}</div>
         <div class="ranking no2"></div>
       </div>
       <div>
-        <div class="score">1000</div>
-        <div class="player-name">player1</div>
+        <div class="score">{{ players[0].score }}</div>
+        <div class="player-name">{{ players[0].playerName }}</div>
         <div class="ranking no1"></div>
       </div>
       <div>
-        <div class="score">300</div>
-        <div class="player-name">player3</div>
+        <div class="score">{{ players[2].score }}</div>
+        <div class="player-name">{{ players[2].playerName }}</div>
         <div class="ranking no3"></div>
       </div>
     </div>
-    <!-- <div class="num">
-      <img class="ranking" :src="Rank01" >
-      <transition name = "fade">
-        <div v-show="rank01show" class="playername">Player1</div>
-      </transition>
-    </div> -->
-    <!-- <div class="num">
-      <img class="ranking" :src="Rank02" >
-      <transition name = "slide">
-        <div v-show="rank02show" class="playername">Player2</div>
-      </transition>
-    </div> -->
-    <!-- <div class="num">
-      <img class="ranking" :src="Rank03" >
-      <transition name="slide">
-        <div v-show="rank03show" class="playername">Player3</div>
-      </transition>
-    </div> -->
   </div>
 </template>
 <script>
@@ -42,6 +24,12 @@ import Rank01 from '../../../assets/ranking01.png'
 import Rank02 from '../../../assets/ranking02.png'
 import Rank03 from '../../../assets/ranking03.png'
 export default {
+  props: {
+    players: {
+      type: Array,
+      default: () => [{ playerName: '', score: 0 }]
+    }
+  },
   data () {
     return {
       Rank01,
@@ -104,6 +92,7 @@ export default {
 .score {
   color: white;
   text-align: center;
+  font-size: 1.2rem
 }
 .rank {
   margin: auto 0;
@@ -111,7 +100,7 @@ export default {
 .rank-title {
   /* text-align: center; */
   font-weight: bold;
-  font-size: 1.5vw;
+  font-size: 1.5rem;
 }
 .num {
   display: flex;

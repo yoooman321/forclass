@@ -14,14 +14,10 @@
         </q-icon>
       </div>
     </div>
-    <div class="loading" v-if="waitForTimeOut">
-      <img :src="loading" />
-      <div style="text-align: center; font-size: 2rem; font-weight: bold;">等待解答...</div>
-    </div>
   </div>
 </template>
 <script>
-import loading from 'src/assets/loading.gif'
+import { sendAnswer } from 'src/backend/index'
 export default {
   props: {
     waitForTimeOut: {
@@ -30,30 +26,18 @@ export default {
     },
     currentQuestion: {
       type: Object
+    },
+    myScore: {
+      type: Number
     }
   },
   data () {
     return {
-      answerOptions: [
-        { options: '①', bgColor: 'green' },
-        { options: '②', bgColor: 'yellow' },
-        { options: '③', bgColor: 'blue' },
-        { options: '④', bgColor: 'red' },
-        { options: '④', bgColor: 'white' }
-      ],
-      // options: [
-      //   { value: 'a', isAnswer: false, type: '文字', file: null },
-      //   { value: 'b', isAnswer: true, type: '文字', file: null },
-      //   { value: 'c', isAnswer: true, type: '文字', file: null },
-      //   { value: 'd', isAnswer: false, type: '文字', file: null },
-      //   { value: 'd', isAnswer: false, type: '文字', file: null }
-      // ],
-      answer: -1,
-      loading,
+      answerOptions: this.$store.optionListSetting,
       myAnswer: [],
-      answerType: '多選',
       corret: true,
-      timeOut: true
+      score: 0,
+      playerID: localStorage.getItem('playerID')
     }
   },
   methods: {
@@ -91,7 +75,6 @@ export default {
       this.$emit('setAnswerButtonDisabled')
     },
     getResult () {
-      console.log('myAns: ', this.myAnswer)
       this.myAnswer.forEach(ele => {
         if (!this.currentQuestion.options[ele].isAnswer) this.corret = false
       })
@@ -100,13 +83,18 @@ export default {
       })
       const checkUnchooseAnswer = option.some(item => item.isAnswer)
       if (checkUnchooseAnswer) this.corret = false
-      console.log('corre: ', this.corret)
+      this.corret ? this.score = 10 : this.score = 0
+      const finalScore = this.myScore + this.score
+      const answerTime = new Date().getTime()
+      sendAnswer(this.playerID, this.myAnswer, finalScore, answerTime)
+      this.$emit('getResult', this.score, this.corret)
     }
   },
   watch: {
     waitForTimeOut () {
-      console.log('watch')
-      console.log('waitForTimeOut: ', this.waitForTimeOut)
+      this.$q.loading.show({
+        message: '等待解答...'
+      })
       this.getResult()
     }
   }

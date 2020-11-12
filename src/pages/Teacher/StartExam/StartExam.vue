@@ -1,6 +1,6 @@
 <template>
   <div>
-    <component :is="whichPage" :id="id" :questionIndex="questionIndex"></component>
+    <component :is="whichPage" :id="id" :questionIndex="questionIndex" :playerInfo="playerInfo"></component>
   </div>
 </template>
 <script>
@@ -9,7 +9,7 @@ import AnimationTransition from './Pages/AnimationTransition'
 import Question from './Pages/Question'
 import GameFinish from './Pages/GameFinish'
 import Ranking from './Pages/Ranking'
-import { getCurrentExamData, setCurrentQuestion, getImageUrl } from 'src/backend/index'
+import { getCurrentExamData, setCurrentQuestion, getImageUrl, getPlayerInfo } from 'src/backend/index'
 import { mapMutations } from 'vuex'
 export default {
   components: {
@@ -24,7 +24,8 @@ export default {
       id: this.$route.params.id,
       examData: {},
       questionIndex: 0,
-      titleImageUrl: ''
+      titleImageUrl: '',
+      playerInfo: []
     }
   },
   computed: {
@@ -39,15 +40,23 @@ export default {
       this.saveCurrentQuestionToVuex()
     })
   },
+  watch: {
+    '$store.state.timesOut' () {
+      const timeOut = this.$store.state.timesOut
+      if (timeOut) {
+        this.getPlayerInfo()
+      }
+    }
+  },
   methods: {
-    ...mapMutations(['saveCurrentExam', 'saveCurrentQuesion']),
+    ...mapMutations(['saveCurrentExam', 'savecurrentQuestion']),
     async setCurrentExamToVuex () {
       this.examData = await getCurrentExamData(this.id)
       this.saveCurrentExam(this.examData)
     },
     async saveCurrentQuestionToVuex () {
       if (this.questionIndex < this.examData.questionList.length) {
-        this.saveCurrentQuesion(this.questionIndex)
+        this.savecurrentQuestion(this.questionIndex)
         if (this.$store.state.currentQuestion.questionTitleImage) {
           this.titleImageUrl = await getImageUrl('questions', this.$store.state.currentQuestion.questionTitleImage)
           this.$store.commit('updateTitleImage', this.titleImageUrl)
@@ -56,6 +65,9 @@ export default {
         return
       }
       this.$store.dispatch('changePage', { examID: this.id, studentPage: 'final', teacherPage: 'game-finish' })
+    },
+    async getPlayerInfo () {
+      this.playerInfo = await getPlayerInfo()
     }
   }
 }

@@ -73,6 +73,8 @@ export default {
 .context {
   text-align: center;
   font-size: 2rem;
+  padding: 0 3vw;
+  /* word-break:  */
 }
 .counted {
   position: absolute;

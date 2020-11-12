@@ -26,7 +26,7 @@ export default {
     now () {
       if (this.finished) {
         clearInterval(this.tick)
-        this.$store.commit('changeTimeOutFlag', true)
+        this.$store.dispatch('changeTimeOutFlag', true)
       }
     }
   },
@@ -62,7 +62,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.commit('changeTimeOutFlag', false)
+    // this.$store.dispatch('changeTimeOutFlag', false)
     this.tick = setInterval(() => {
       this.now = DateTime.local()
     }, 10)

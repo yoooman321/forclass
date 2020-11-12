@@ -1,7 +1,7 @@
 <template>
   <div class="final-result">
     <div class="title">結束出爐</div>
-    <div class="content">您的分數： {{ score }}</div>
+    <div class="content">您的分數： {{ myScore }}</div>
     <div class="content">您的名次： {{ rank }}</div>
     <img :src="rankImage" />
   </div>
@@ -13,6 +13,14 @@ import rankThree from 'src/assets/rankThree.png'
 import rankOthers from 'src/assets/rankOthers.png'
 import { db } from 'src/boot/serverConnection'
 export default {
+  props: {
+    myResult: {
+      type: Boolean
+    },
+    myScore: {
+      type: Number
+    }
+  },
   data () {
     return {
       score: 100,
@@ -25,6 +33,7 @@ export default {
     }
   },
   mounted () {
+    if (this.myResult) this.$emit('setAddScore', 10)
     switch (this.rank) {
       case 1:
         this.rankImage = this.rankOne

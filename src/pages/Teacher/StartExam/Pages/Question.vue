@@ -3,14 +3,14 @@
     <!-- <audio autoplay loop :src="music" ref="au" muted> -->
       <!-- <source :src="music" type="audio/mpeg"> -->
     <!-- </audio> -->
-      <question-part :title="currentQuestion.questionTitle"></question-part>
+      <question-part :title="currentQuestion.questionTitle" :imageUrl="currentQuestion.imageUrl"></question-part>
       <timer class="timer" :time="currentQuestion.settings.limitedTime"></timer>
       <answers-part :options="currentQuestion.options"></answers-part>
       <transition name="slide">
-        <statistics class="statistics" v-if="timeOut"></statistics>
+        <statistics class="statistics" v-if="staticFlag" :playerInfo="playerInfo" :optionAmount="currentQuestion.options.length"></statistics>
       </transition>
       <div class="button">
-        <q-btn v-if="timeOut" color="secondary" label="目前戰況" size="xl" @click="next"></q-btn>
+        <q-btn v-if="staticFlag" color="secondary" label="目前戰況" size="xl" @click="next"></q-btn>
      </div>
       <!-- <transition name="slide">
         <rank v-if="ranktime" class="rank"></rank>
@@ -28,7 +28,14 @@ import counted from 'src/assets/counted.mp3'
 // import Lobby from './Lobby'
 // import AnimationTransition from './AnimationTransition'
 export default {
-  props: ['questionIndex'],
+  props: {
+    questionIndex: {
+      type: Number
+    },
+    playerInfo: {
+      type: Array
+    }
+  },
   data () {
     return {
       bgColor: ['#FEEFE5', '#DDE7C7', '#FF8CC6', '#FEF9FF', '#C8EAD3', '#BAD7F2', '#FFA5AB', '#FFC857'],
@@ -46,6 +53,14 @@ export default {
   computed: {
     timeOut () {
       return this.$store.state.timesOut
+    },
+    staticFlag () {
+      return this.$store.state.showStatic
+    }
+  },
+  watch: {
+    timeOut () {
+      if (this.timeOut) this.$store.dispatch('changePage', { examID: this.id, studentPage: 'ranking', teacherPage: 'question' })
     }
   },
   components: {
@@ -59,7 +74,6 @@ export default {
   },
   methods: {
     randomBGColor () {
-      console.log('ttt')
       return Math.floor(Math.random() * Math.floor(this.bgColor.length))
     },
     play () {
@@ -72,19 +86,14 @@ export default {
       }, 4000)
     },
     next () {
+      this.$store.dispatch('changeTimeOutFlag', false)
       if (this.questionIndex < this.$store.state.currentExam.questionList.length) {
         this.$store.dispatch('changePage', { examID: this.id, studentPage: 'ranking', teacherPage: 'ranking' })
-        // this.$store.commit('changeTeacherPage', 'ranking')
       } else {
-        console.log('over')
         this.$bus.$emit('saveCurrentQuestionToVuex')
       }
       // this.$bus.$emit('playBackgroundMusic')
     }
-  },
-  mounted () {
-    this.imgUrl = this.titleImageUrl
-    console.log('props: ', this.titleImageUrl)
   },
   created () {
     this.$bus.$on('playCountedSound', () => {

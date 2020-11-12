@@ -27,7 +27,7 @@
           ></q-input>
           </div>
           <div class="question-image">
-            <q-file v-model="questionTitleImage" label="插入問題圖片（選填）" outlined :filter="checkFileType" @rejected="onRejected">
+            <q-file v-model="questionTitleImage" label="插入問題圖片（選填）" outlined :filter="checkFileType" @rejected="onRejected" @input="setQuesiontObject('questionTitleImage', questionTitleImage)">
               <template v-slot:prepend>
                 <q-icon name="attach_file"></q-icon>
               </template>

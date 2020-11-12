@@ -15,14 +15,23 @@ export default function () {
         }
       ]
     },
-    questionImageList: [],
-    answerImageList: [],
+    optionListSetting: [
+      { number: 'A', bgColor: 'green' },
+      { number: 'B', bgColor: 'yellow' },
+      { number: 'C', bgColor: 'blue' },
+      { number: 'D', bgColor: 'red' },
+      { number: 'E', bgColor: 'white' },
+      { number: 'F', bgColor: 'white' },
+      { number: 'G', bgColor: 'white' },
+      { number: 'H', bgColor: 'white' }
+    ],
     oldExamList: [],
     currentExam: [],
     currentQuestion: {},
     timesOut: false,
     teatcherPage: 'lobby',
     questionIndex: 0,
-    questionTitleImage: ''
+    // questionTitleImage: '',
+    showStatic: false
   }
 }

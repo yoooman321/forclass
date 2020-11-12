@@ -19,7 +19,3 @@ export const db = firebaseApp.firestore()
 export const auth = firebaseApp.auth()
 export const storage = firebaseApp.storage()
 Vue.prototype.$fb = firebaseApp
-// store.$fb = firebaseService
-// console.log(firebaseApp.auth())
-// console.log('bb: ', auth)
-// something to do

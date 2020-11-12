@@ -1,34 +1,42 @@
 import { db, storage } from 'src/boot/serverConnection'
 import Store from '../store'
-import { Notify } from 'quasar'
-export function addQuesionToFirebase () {
+// import { Notify } from 'quasar'
+export function addQuesionToFirebase (finalExam) {
   const newID = Math.floor(Math.random() * 1000000)
-  const question = Store.getters.exam
-  return db.collection('questions').doc(String(newID)).set(question)
+  return db.collection('questions').doc(String(newID)).set(finalExam)
     .then(() => {
       return true
-      // addQuestionImageToFirebase()
     })
-    .catch(err => {
-      console.log('err: ', err)
+    .catch(() => {
       return false
     })
 }
-export function addQuestionImageToFirebase () {
-  const questionImageList = Store.getters.questionImageList
-  questionImageList.forEach(ele => {
-    storage.ref('questions/' + ele.name).put(ele)
-  })
-  Notify.create({
-    message: '新增成功',
-    color: 'positive'
-  })
+export async function addQuestionImageToFirebase () {
+  const questions = Store.getters.questionList
+  for (let i = 0; i < questions.length; i++) {
+    if (questions[i].questionTitleImage) {
+      const imageName = questions[i].questionTitleImage.name
+      const storageRef = storage.ref('questions/' + imageName)
+      await storageRef.put(questions[i].questionTitleImage)
+      const url = await storageRef.getDownloadURL()
+      questions[i].imageUrl = url
+    }
+  }
+  return addAnswerImageToFirebase(questions)
 }
-export function addAnswerImageToFirebase () {
-  const qanswerImageList = Store.getters.answerImageList
-  qanswerImageList.forEach(ele => {
-    storage.ref('answers/' + ele.name).put(ele)
-  })
+export async function addAnswerImageToFirebase (questions) {
+  for (let i = 0; i < questions.length; i++) {
+    for (let j = 0; j < questions[i].options.length; j++) {
+      if (questions[i].options[j].type === '圖片') {
+        const imageName = questions[i].options[j].file.name
+        const storageRef = storage.ref('answers/' + imageName)
+        await storageRef.put(questions[i].options[j].file)
+        const url = await storageRef.getDownloadURL()
+        questions[i].options[j].imageUrl = url
+      }
+    }
+  }
+  return questions
 }
 export function addCurrentExamData (examID, examData) {
   db.collection('currentExam').doc(examID).set(examData)
@@ -50,13 +58,13 @@ export function getCurrentExamData (examID) {
     })
 }
 export function setCurrentQuestion (examID, question) {
-  db.collection('currentQuesion').doc(String(examID)).set(question)
+  db.collection('currentQuestion').doc(String(examID)).set(question)
     .catch(err => {
       console.error('err: ', err)
     })
 }
 export function updateCurrentQuestion (examID, question) {
-  db.collection('currentQuesion').doc(String(examID)).update(question)
+  db.collection('currentQuestion').doc(String(examID)).update(question)
     .then(res => {
       // console.log('res: ', res)
     })
@@ -101,7 +109,7 @@ export function deletePlayer () {
     .catch(err => console.log('err: ', err))
 }
 export function deleteQuestion (examID) {
-  db.collection('currentQuesion').doc(String(examID)).delete()
+  db.collection('currentQuestion').doc(String(examID)).delete()
     .then(() => {
       console.log('delete successfully!')
     })
@@ -112,4 +120,21 @@ export function deleteExam (examID) {
       return true
     })
     .catch(err => console.log('err: ', err))
+}
+export function sendAnswer (playerID, answer, score, answerTime) {
+  db.collection('player').doc(String(playerID)).update({
+    answer,
+    answerTime,
+    score
+  })
+    .then(() => console.log('sucessful'))
+}
+export async function getPlayerInfo () {
+  const playerInfo = []
+  const player = db.collection('player')
+  const res = await player.orderBy('answerTime', 'asc').get()
+  res.forEach(ele => {
+    playerInfo.push(ele.data())
+  })
+  return playerInfo
 }

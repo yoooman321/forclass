@@ -24,7 +24,7 @@
   </div>
 </template>
 <script>
-import { storage, auth } from 'src/boot/serverConnection'
+import { auth } from 'src/boot/serverConnection'
 export default {
   data () {
     return {
@@ -55,20 +55,6 @@ export default {
             position: 'top-right',
             timeout: 1000
           })
-        })
-    },
-    test () {
-      var forestRef = storage.ref('questions/ranking01.png')
-      // Get metadata properties
-      forestRef.getMetadata()
-        .then(function (metadata) {
-          this.aaa = metadata
-          console.log('aaa: ', this.aaa)
-        // Metadata now contains the metadata for 'images/forest.jpg'
-        })
-        .catch(function (error) {
-          console.log('err: ', error)
-          // Uh-oh, an error occurred!
         })
     }
   }

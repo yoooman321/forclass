@@ -21,6 +21,9 @@
           :myResult="myResult"
           @setAddScore="setAddScore"
           :currentQuestion="currentQuestion"
+          :myScore="myScore"
+          @getResult="getResult"
+          :addScore="addScore"
         >
         </component>
     </q-page-container>
@@ -48,17 +51,18 @@ export default {
   data () {
     return {
       id: this.$route.params.id,
-      whichPage: 'answer',
+      whichPage: '',
       nickName: '',
       headerTitle: '進入遊戲',
-      myScore: 1000,
+      myScore: 0,
       waitForTimeOut: false,
       answerButtonDisabled: true,
       myResult: true,
       interval: false,
-      addScore: 0,
+      finalScore: 0,
       currentQuestion: {},
-      showPage: false
+      showPage: false,
+      addScore: 0
     }
   },
   components: {
@@ -72,15 +76,16 @@ export default {
     whichPage () {
       this.waitForTimeOut = false
       this.answerButtonDisabled = true
+      this.$q.loading.hide()
     },
-    addScore () {
+    finalScore () {
       // if (this.addScore === this.myScore) return
       window.setTimeout(() => {
         this.interval = window.setInterval(() => {
-          if (this.myScore !== this.addScore) {
+          if (this.myScore !== this.finalScore) {
             this.myScore++
           }
-          if (this.addScore === this.myScore) {
+          if (this.finalScore === this.myScore) {
             clearInterval(this.interval)
           }
         }, 20)
@@ -89,56 +94,58 @@ export default {
   },
   mounted () {
     // this.$q.loading.show()
-    const question = db.collection('currentQuesion')
-    question.onSnapshot(res => {
+    const exam = db.collection('currentExam')
+    let checkExam = false
+    exam.onSnapshot(res => {
       res.forEach(doc => {
-        this.currentQuestion = doc.data()
+        if (doc.data().examID === this.id) checkExam = true
       })
-      console.log('ddd: ', this.currentQuestion)
+      if (!checkExam) {
+        this.$q.loading.hide()
+        this.$router.push('/notExist')
+        return
+      }
+      const question = db.collection('currentQuestion')
+      question.onSnapshot(res => {
+        res.forEach(doc => {
+          this.currentQuestion = doc.data()
+        })
+      })
+      const playerID = localStorage.getItem('playerID')
+      if (playerID !== null) {
+        db.collection('player').doc(String(playerID)).get()
+          .then(ele => {
+            this.nickName = ele.data().playerName
+            this.myScore = ele.data().score
+            this.$bus.$emit('changeView', { bool: false, name: this.nickName })
+          })
+      }
+      const page = db.collection('whichPage')
+      page.onSnapshot(res => {
+        res.forEach(doc => {
+          this.whichPage = doc.data().page
+        })
+      })
+      this.showPage = true
+      this.$q.loading.hide()
     })
-    // const exam = db.collection('currentExam')
-    // let checkExam = false
-    // exam.onSnapshot(res => {
-    //   res.forEach(doc => {
-    //     console.log(doc.data())
-    //     if (doc.data().examID === this.id) checkExam = true
-    //   })
-    //   if (!checkExam) {
-    //     this.$q.loading.hide()
-    //     this.$router.push('/notExist')
-    //     return
-    //   }
-    //   const playerID = localStorage.getItem('playerID')
-    //   if (!playerID) return
-    //   db.collection('player').doc(String(playerID)).get()
-    //     .then(ele => {
-    //       this.nickName = ele.data().playerName
-    //       this.myScore = ele.data().score
-    //       this.$bus.$emit('changeView', { bool: false, name: this.nickName })
-    //     })
-    //   const page = db.collection('whichPage')
-    //   page.onSnapshot(res => {
-    //     res.forEach(doc => {
-    //       this.whichPage = doc.data().page
-    //     })
-    //   })
-    //   this.showPage = true
-    //   this.$q.loading.hide()
-    // })
   },
   methods: {
     setNickName (name) {
       this.nickName = name
     },
     sentAnswer () {
-      console.log('se')
       this.waitForTimeOut = true
     },
     setAnswerButtonDisabled () {
       this.answerButtonDisabled = false
     },
     setAddScore (score) {
-      this.addScore = this.myScore + score
+      this.finalScore = this.myScore + score
+    },
+    getResult (score, result) {
+      this.myResult = result
+      this.addScore = score
     }
   }
 }
