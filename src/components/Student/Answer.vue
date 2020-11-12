@@ -33,7 +33,7 @@ export default {
   },
   data () {
     return {
-      answerOptions: this.$store.optionListSetting,
+      answerOptions: this.$store.state.optionListSetting,
       myAnswer: [],
       corret: true,
       score: 0,
@@ -75,15 +75,20 @@ export default {
       this.$emit('setAnswerButtonDisabled')
     },
     getResult () {
-      this.myAnswer.forEach(ele => {
-        if (!this.currentQuestion.options[ele].isAnswer) this.corret = false
-      })
-      const option = this.currentQuestion.options.filter((item, index) => {
-        return !this.myAnswer.includes(index)
-      })
-      const checkUnchooseAnswer = option.some(item => item.isAnswer)
-      if (checkUnchooseAnswer) this.corret = false
-      this.corret ? this.score = 10 : this.score = 0
+      if (this.myAnswer.length < 1) {
+        this.score = 0
+        this.corret = false
+      } else {
+        this.myAnswer.forEach(ele => {
+          if (!this.currentQuestion.options[ele].isAnswer) this.corret = false
+        })
+        const option = this.currentQuestion.options.filter((item, index) => {
+          return !this.myAnswer.includes(index)
+        })
+        const checkUnchooseAnswer = option.some(item => item.isAnswer)
+        if (checkUnchooseAnswer) this.corret = false
+        this.corret ? this.score = 10 : this.score = 0
+      }
       const finalScore = this.myScore + this.score
       const answerTime = new Date().getTime()
       sendAnswer(this.playerID, this.myAnswer, finalScore, answerTime)
