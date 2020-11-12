@@ -1,6 +1,33 @@
 import { db, storage } from 'src/boot/serverConnection'
 import Store from '../store'
-// import { Notify } from 'quasar'
+
+const getQuestionUrlFromFirebase = async (imgObject, type = 'questions') => {
+  const { name } = imgObject
+  const storageRef = storage.ref(`${type}/${name}`)
+  await storageRef.put(imgObject)
+  const url = await storageRef.getDownloadURL()
+  return url
+}
+
+const addImageToFirebase = async questions => {
+  for (let i = 0; i < questions.length; i++) {
+    if (!questions[i].questionTitleImage) continue
+    const question = questions[i]
+    const { options } = question
+    const url = await getQuestionUrlFromFirebase(question.questionTitleImage)
+    question.imageUrl = url
+    await addAnswerImageToFirebase(options)
+  }
+}
+const addAnswerImageToFirebase = async options => {
+  for (let i = 0; i < options.length; i++) {
+    if (options[i].type !== '圖片') continue
+    const option = options[i]
+    const url = await getQuestionUrlFromFirebase(option.file, 'answers')
+    option.imageUrl = url
+  }
+}
+
 export function addQuesionToFirebase (finalExam) {
   const newID = Math.floor(Math.random() * 1000000)
   return db.collection('questions').doc(String(newID)).set(finalExam)
@@ -11,31 +38,10 @@ export function addQuesionToFirebase (finalExam) {
       return false
     })
 }
-export async function addQuestionImageToFirebase () {
+
+export const getFinalQuestionList = async () => {
   const questions = Store.getters.questionList
-  for (let i = 0; i < questions.length; i++) {
-    if (questions[i].questionTitleImage) {
-      const imageName = questions[i].questionTitleImage.name
-      const storageRef = storage.ref('questions/' + imageName)
-      await storageRef.put(questions[i].questionTitleImage)
-      const url = await storageRef.getDownloadURL()
-      questions[i].imageUrl = url
-    }
-  }
-  return addAnswerImageToFirebase(questions)
-}
-export async function addAnswerImageToFirebase (questions) {
-  for (let i = 0; i < questions.length; i++) {
-    for (let j = 0; j < questions[i].options.length; j++) {
-      if (questions[i].options[j].type === '圖片') {
-        const imageName = questions[i].options[j].file.name
-        const storageRef = storage.ref('answers/' + imageName)
-        await storageRef.put(questions[i].options[j].file)
-        const url = await storageRef.getDownloadURL()
-        questions[i].options[j].imageUrl = url
-      }
-    }
-  }
+  await addImageToFirebase(questions)
   return questions
 }
 export function addCurrentExamData (examID, examData) {

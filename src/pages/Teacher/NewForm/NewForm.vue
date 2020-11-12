@@ -23,7 +23,7 @@
 <script>
 import QuestionSet from 'src/components/Teacher/NewExam/QuestionSet/QuestionSet'
 import { mapMutations } from 'vuex'
-import { addQuestionImageToFirebase, addQuesionToFirebase } from 'src/backend/index'
+import { getFinalQuestionList, addQuesionToFirebase } from 'src/backend/index'
 export default {
   name: 'PageIndex',
   computed: {
@@ -66,7 +66,7 @@ export default {
       }
       // 驗證過後:
       this.$q.loading.show({ message: '新增中，請稍等...' })
-      const finalQuestionList = await addQuestionImageToFirebase()
+      const finalQuestionList = await getFinalQuestionList()
       const finalExam = { ...this.questions }
       finalExam.questionList = this.clearUselessData(finalQuestionList)
       // need add notify
