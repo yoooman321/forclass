@@ -1,6 +1,6 @@
 <template>
   <div class="question-part">
-    <div class="title">
+    <div class="title" :class="titleSize">
       {{title}}
     </div>
     <div>
@@ -18,6 +18,24 @@ export default {
     imageUrl: {
       type: String
     }
+  },
+  data () {
+    return {
+      titleSize: ''
+    }
+  },
+  created () {
+    switch (true) {
+      case this.title.length > 250:
+        this.titleSize = 'title-large'
+        break
+      case this.title.length > 150:
+        this.titleSize = 'title-medium'
+        break
+      default:
+        this.titleSize = 'title-small'
+        break
+    }
   }
 }
 </script>
@@ -31,13 +49,20 @@ export default {
 
 .title {
   /* border-bottom: 1px solid black; */
-  width: 70vw;
-  height: 25vh;
-  font-size: 3em;
+  max-height: 25vh;
   font-weight: bold;
   padding-top: 1vh;
   text-align: center;
-  margin: 0 auto;
+  margin: 0 12vw;
+}
+.title-large {
+  font-size: 2em;
+}
+.title-medium {
+  font-size: 2.5em;
+}
+.title-small {
+  font-size: 3em;
 }
 .noImg {
   padding-top: 25vh;

@@ -2,7 +2,7 @@
   <div class="animation-transition">
         <div class="animate__animated animate__slideInRight">
           <div class="title ">Question {{ questionIndex }}</div>
-          <div class="context"> {{ questionTitle }}</div>
+          <div class="context" :class="contextSize"> {{ questionTitle }}</div>
         </div>
         <div v-if="showTitle" class="counted">{{counter}}</div>
   </div>
@@ -15,11 +15,23 @@ export default {
       showTitle: false,
       counter: 3,
       timer: null,
-      questionTitle: this.$store.state.currentQuestion.questionTitle
+      questionTitle: this.$store.state.currentQuestion.questionTitle,
+      contextSize: ''
     }
   },
   props: ['id', 'questionIndex'],
   mounted () {
+    switch (true) {
+      case this.questionTitle.length > 250:
+        this.contextSize = 'context-large'
+        break
+      case this.questionTitle.length > 150:
+        this.contextSize = 'context-medium'
+        break
+      default:
+        this.contextSize = 'context-small'
+        break
+    }
     setTimeout(() => {
       this.showTitle = true
       this.counting()
@@ -72,9 +84,17 @@ export default {
 }
 .context {
   text-align: center;
-  font-size: 2rem;
   padding: 0 3vw;
   /* word-break:  */
+}
+.context-large {
+  font-size: 1.5em;
+}
+.context-medium {
+  font-size: 2em;
+}
+.context-small {
+  font-size: 2.5em;
 }
 .counted {
   position: absolute;

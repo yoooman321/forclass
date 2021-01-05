@@ -9,7 +9,8 @@ import AnimationTransition from './Pages/AnimationTransition'
 import Question from './Pages/Question'
 import GameFinish from './Pages/GameFinish'
 import Ranking from './Pages/Ranking'
-import { getCurrentExamData, setCurrentQuestion, getImageUrl, getPlayerInfo } from 'src/backend/index'
+import { getCurrentExamData, setCurrentQuestion, getPlayerInfo } from 'src/backend/index'
+import { db } from 'src/boot/serverConnection'
 import { mapMutations } from 'vuex'
 export default {
   components: {
@@ -25,7 +26,8 @@ export default {
       examData: {},
       questionIndex: 0,
       titleImageUrl: '',
-      playerInfo: []
+      playerInfo: [],
+      previosIndex: -1
     }
   },
   computed: {
@@ -36,18 +38,19 @@ export default {
   mounted () {
     this.setCurrentExamToVuex()
     setCurrentQuestion(this.id, {})
+    this.watchPlayerAnswer()
     this.$bus.$on('saveCurrentQuestionToVuex', () => {
       this.saveCurrentQuestionToVuex()
     })
   },
-  watch: {
-    '$store.state.timesOut' () {
-      const timeOut = this.$store.state.timesOut
-      if (timeOut) {
-        this.getPlayerInfo()
-      }
-    }
-  },
+  // watch: {
+  //   '$store.state.timesOut' () {
+  //     const timeOut = this.$store.state.timesOut
+  //     if (timeOut) {
+  //       this.getPlayerInfo()
+  //     }
+  //   }
+  // },
   methods: {
     ...mapMutations(['saveCurrentExam', 'savecurrentQuestion']),
     async setCurrentExamToVuex () {
@@ -57,10 +60,14 @@ export default {
     async saveCurrentQuestionToVuex () {
       if (this.questionIndex < this.examData.questionList.length) {
         this.savecurrentQuestion(this.questionIndex)
-        if (this.$store.state.currentQuestion.questionTitleImage) {
-          this.titleImageUrl = await getImageUrl('questions', this.$store.state.currentQuestion.questionTitleImage)
-          this.$store.commit('updateTitleImage', this.titleImageUrl)
-        }
+        // if (this.$store.state.currentQuestion.questionTitleImage) {
+        //   this.titleImageUrl = await getImageUrl('questions', this.$store.state.currentQuestion.questionTitleImage)
+        //   this.$store.commit('updateTitleImage', this.titleImageUrl)
+        // }
+        this.previosIndex = this.questionIndex
+        // this.watchPlayerAnswer()
+        console.log('play: ', this.playerInfo)
+        this.playerInfo = []
         this.questionIndex++
         return
       }
@@ -68,6 +75,23 @@ export default {
     },
     async getPlayerInfo () {
       this.playerInfo = await getPlayerInfo()
+    },
+    watchPlayerAnswer () {
+      console.log('getInfo')
+      // const playerInfo = []
+      const player = db.collection('player')
+      player.orderBy('answerTime', 'asc').onSnapshot(res => {
+        res.forEach(data => {
+          if (!this.playerInfo.includes(data.data().playerName)) this.playerInfo.push(data.data())
+          console.log('ele: ', data.data())
+        })
+      })
+    },
+    unsubscribe () {
+      const playerRef = db.collection('player')
+      playerRef.where('questionIndex', '==', this.previosIndex).orderBy('answerTime', 'asc').onSnapshot(res => {
+        console.log('noo: ', this.previosIndex)
+      })
     }
   }
 }

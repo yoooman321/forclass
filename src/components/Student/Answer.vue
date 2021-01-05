@@ -8,7 +8,7 @@
         class="answers"
         @click="chooseAnswer(index)"
       >
-        <div>{{ answerOptions[index].options }}</div>
+        <div>{{ answerOptions[index].number }}</div>
         <q-icon v-if="myAnswer.includes(index)" class="material-icons text-green done" style="font-size: 5rem;">
           done
         </q-icon>
@@ -29,6 +29,9 @@ export default {
     },
     myScore: {
       type: Number
+    },
+    questionIndex: {
+      type: Number
     }
   },
   data () {
@@ -39,6 +42,9 @@ export default {
       score: 0,
       playerID: localStorage.getItem('playerID')
     }
+  },
+  mounted () {
+    console.log('eeee: ', this.questionIndex)
   },
   methods: {
     chooseAnswer (index) {
@@ -75,23 +81,26 @@ export default {
       this.$emit('setAnswerButtonDisabled')
     },
     getResult () {
-      if (this.myAnswer.length < 1) {
-        this.score = 0
-        this.corret = false
-      } else {
-        this.myAnswer.forEach(ele => {
-          if (!this.currentQuestion.options[ele].isAnswer) this.corret = false
-        })
-        const option = this.currentQuestion.options.filter((item, index) => {
-          return !this.myAnswer.includes(index)
-        })
-        const checkUnchooseAnswer = option.some(item => item.isAnswer)
-        if (checkUnchooseAnswer) this.corret = false
-        this.corret ? this.score = 10 : this.score = 0
-      }
+      // if (this.myAnswer.length < 1) {
+      //   console.log('<1')
+      //   this.score = 0
+      //   this.corret = false
+      // } else {}
+      console.log('my: ', this.myAnswer)
+      this.myAnswer.forEach(ele => {
+        if (!this.currentQuestion.options[ele].isAnswer) this.corret = false
+      })
+      const option = this.currentQuestion.options.filter((item, index) => {
+        return !this.myAnswer.includes(index)
+      })
+      const checkUnchooseAnswer = option.some(item => item.isAnswer)
+      if (checkUnchooseAnswer) this.corret = false
+      this.corret ? this.score = 10 : this.score = 0
+      // }
+      console.log('cccL :', this.corret)
       const finalScore = this.myScore + this.score
       const answerTime = new Date().getTime()
-      sendAnswer(this.playerID, this.myAnswer, finalScore, answerTime)
+      sendAnswer(this.questionIndex, this.playerID, this.myAnswer, finalScore, answerTime)
       this.$emit('getResult', this.score, this.corret)
     }
   },

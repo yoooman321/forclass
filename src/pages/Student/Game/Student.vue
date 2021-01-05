@@ -25,6 +25,7 @@
           @getResult="getResult"
           :addScore="addScore"
         >
+        <!-- :questionIndex="questionIndex" -->
         </component>
     </q-page-container>
 
@@ -63,6 +64,7 @@ export default {
       currentQuestion: {},
       showPage: false,
       addScore: 0
+      // questionIndex: 0
     }
   },
   components: {
@@ -124,6 +126,8 @@ export default {
       page.onSnapshot(res => {
         res.forEach(doc => {
           this.whichPage = doc.data().page
+          // console.log('page: ', this.whichPage)
+          // if (this.whichPage === 'ranking') this.questionIndex++
         })
       })
       this.showPage = true

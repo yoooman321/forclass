@@ -132,7 +132,7 @@ export default {
 .timer {
   position: absolute;
   right: 5vw;
-  top: 5vh;
+  bottom: 46vh;
 }
 .statistics {
   position: absolute;
