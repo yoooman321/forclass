@@ -31,7 +31,8 @@ export default function () {
     timesOut: false,
     teatcherPage: 'lobby',
     questionIndex: 0,
-    // questionTitleImage: '',
-    showStatic: false
+    studentQuestionIndex: 0,
+    showStatic: false,
+    playerAnswerList: []
   }
 }

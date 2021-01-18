@@ -34,7 +34,7 @@
         <q-toolbar-title>
           <div class="footer">
             <div style="padding: 0 3vw; font-weight: bold;"> {{ nickName }} </div>
-            <div style="padding: 0 3vw; font-weight: bold; background-color: pink; border-radius: 1vh;">分數: {{ myScore }}</div>
+            <div style="padding: 0 3vw; font-weight: bold; background-color: pink; border-radius: 1vh;">答對題數: {{ myScore }}</div>
           </div>
         </q-toolbar-title>
       </q-toolbar>

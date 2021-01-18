@@ -19,6 +19,7 @@ export default {
   methods: {
     play () {
       // this.$store.dispatch('changecurrentQuestiont')
+      this.$store.commit('cleanPlayerAnswerList')
       this.$bus.$emit('saveCurrentQuestionToVuex')
       this.$store.dispatch('changePage', { examID: this.id, studentPage: 'animation-transition', teacherPage: 'animation-transition' })
       // this.$store.commit('changeTeacherPage', 'animation-transition')

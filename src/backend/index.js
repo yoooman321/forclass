@@ -127,11 +127,18 @@ export function deleteExam (examID) {
     })
     .catch(err => console.log('err: ', err))
 }
-export function sendAnswer (playerID, answer, score, answerTime) {
+export function sendAnswer (playerID, answer, score, answerTime, questionIndex) {
+  console.log('send Answer obj: ', {
+    answer,
+    answerTime,
+    score,
+    questionIndex
+  })
   db.collection('player').doc(String(playerID)).update({
     answer,
     answerTime,
-    score
+    score,
+    questionIndex
   })
     .then(() => console.log('sucessful'))
 }

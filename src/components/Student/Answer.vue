@@ -29,9 +29,6 @@ export default {
     },
     myScore: {
       type: Number
-    },
-    questionIndex: {
-      type: Number
     }
   },
   data () {
@@ -40,11 +37,9 @@ export default {
       myAnswer: [],
       corret: true,
       score: 0,
-      playerID: localStorage.getItem('playerID')
+      playerID: localStorage.getItem('playerID'),
+      studentQuestionIndex: this.$store.state.studentQuestionIndex
     }
-  },
-  mounted () {
-    console.log('eeee: ', this.questionIndex)
   },
   methods: {
     chooseAnswer (index) {
@@ -81,12 +76,6 @@ export default {
       this.$emit('setAnswerButtonDisabled')
     },
     getResult () {
-      // if (this.myAnswer.length < 1) {
-      //   console.log('<1')
-      //   this.score = 0
-      //   this.corret = false
-      // } else {}
-      console.log('my: ', this.myAnswer)
       this.myAnswer.forEach(ele => {
         if (!this.currentQuestion.options[ele].isAnswer) this.corret = false
       })
@@ -95,12 +84,11 @@ export default {
       })
       const checkUnchooseAnswer = option.some(item => item.isAnswer)
       if (checkUnchooseAnswer) this.corret = false
-      this.corret ? this.score = 10 : this.score = 0
-      // }
-      console.log('cccL :', this.corret)
+      this.corret ? this.score = 1 : this.score = 0
       const finalScore = this.myScore + this.score
       const answerTime = new Date().getTime()
-      sendAnswer(this.questionIndex, this.playerID, this.myAnswer, finalScore, answerTime)
+      sendAnswer(this.playerID, this.myAnswer, finalScore, answerTime, this.studentQuestionIndex)
+      this.$store.commit('addStudentQuestionIndex')
       this.$emit('getResult', this.score, this.corret)
     }
   },

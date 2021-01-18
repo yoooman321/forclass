@@ -1,16 +1,6 @@
 <template>
   <div class="static-part">
     <div class="statistic"></div>
-    <div class="fastPlayer">
-      <q-card bordered class="bg-orange-6">
-        <q-card-section>
-          <div style="display: flex; align-items: center;">
-            <img style="margin-right: 1vw; height: 5vh;" :src="fantastic">
-            最快玩家：{{ playerInfo[0].playerName }}
-          </div>
-        </q-card-section>
-      </q-card>
-      </div>
   </div>
 </template>
 <script>

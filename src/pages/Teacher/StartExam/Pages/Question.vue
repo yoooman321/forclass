@@ -1,20 +1,27 @@
 <template>
-  <div>
+  <div class="question">
     <!-- <audio autoplay loop :src="music" ref="au" muted> -->
       <!-- <source :src="music" type="audio/mpeg"> -->
     <!-- </audio> -->
-      <question-part :title="currentQuestion.questionTitle" :imageUrl="currentQuestion.imageUrl"></question-part>
-      <timer class="timer" :time="currentQuestion.settings.limitedTime"></timer>
+    <div class="top">
+      <question-part :title="currentQuestion.questionTitle"></question-part>
+    </div>
+    <div class="middle">
+      <player-answer-list class="middle__playerList"></player-answer-list>
+      <img class="middle__img" :src="currentQuestion.imageUrl" v-if="currentQuestion.imageUrl">
+      <div class="middle-left">
+        <timer class="timer" :time="currentQuestion.settings.limitedTime"></timer>
+        <div class="button">
+          <q-btn v-if="staticFlag" color="secondary" label="目前戰況" size="xl" @click="next"></q-btn>
+        </div>
+      </div>
+    </div>
+    <div class="bottom">
       <answers-part :options="currentQuestion.options"></answers-part>
+    </div>
       <transition name="slide">
         <statistics class="statistics" v-if="staticFlag" :playerInfo="playerInfo" :optionAmount="currentQuestion.options.length"></statistics>
       </transition>
-      <div class="button">
-        <q-btn v-if="staticFlag" color="secondary" label="目前戰況" size="xl" @click="next"></q-btn>
-     </div>
-      <!-- <transition name="slide">
-        <rank v-if="ranktime" class="rank"></rank>
-      </transition> -->
   </div>
 </template>
 <script>
@@ -22,11 +29,9 @@ import Timer from 'src/components/Games/Timer/Timer'
 import QuestionPart from 'src/components/Games/QuestionPart/QuestionPart'
 import AnswersPart from 'src/components/Games/AnswersPart/AnswersPart'
 import Statistics from 'src/components/Games/Statistics/Statistics'
-// import Rank from 'src/components/Games/Rank/Rank'
+import PlayerAnswerList from 'src/components/Games/Rank/PlayerAnswerList'
 import music from 'src/assets/Tin_Spirit.mp3'
 import counted from 'src/assets/counted.mp3'
-// import Lobby from './Lobby'
-// import AnimationTransition from './AnimationTransition'
 export default {
   props: {
     questionIndex: {
@@ -67,7 +72,8 @@ export default {
     QuestionPart,
     Timer,
     AnswersPart,
-    Statistics
+    Statistics,
+    PlayerAnswerList
     // Rank
     // Lobby,
     // AnimationTransition
@@ -87,6 +93,7 @@ export default {
     },
     next () {
       this.$store.dispatch('changeTimeOutFlag', false)
+      this.$store.commit('cleanPlayerAnswerList')
       if (this.questionIndex < this.$store.state.currentExam.questionList.length) {
         this.$store.dispatch('changePage', { examID: this.id, studentPage: 'ranking', teacherPage: 'ranking' })
       } else {
@@ -125,32 +132,39 @@ export default {
 }
 </script>
 <style scoped>
-.start {
-  height: 100vh;
-  background-color: #FFFDFD;
+.top {
+  height: 25vh;
+  text-align: center;
+  margin: 0 2vw;
 }
-.timer {
-  position: absolute;
-  right: 5vw;
-  bottom: 46vh;
+.middle {
+  height: 30vh;
+  display: flex;
+  width: 98vw;
+  justify-content: space-between;
+  padding: 0 0 1vh;
+  margin: 0 1vw;
+  align-items: center;
+}
+.middle__playerList {
+  width: 30%;
+  height: 100%;
+}
+.middle__img {
+  width: auto;
+  max-width: 40%;
+  height: 100%;
 }
 .statistics {
   position: absolute;
   z-index: 3;
-  top: 10vh;
+  top: 15vh;
   left: 20vw;
 }
-.rank {
-  position: absolute;
-  top: 12vh;
-  left: 2vw;
-}
 .slide-enter {
-  /* transform: translateY(20px); */
   opacity: 0;
 }
 .slide-enter-active {
-  /* transition: opacity 1s; */
   transition: opacity 1s;
   animation: slide-in 1.5s ease-out forwards;
 }
@@ -161,10 +175,5 @@ export default {
   to {
     transform: translateY(0);
   }
-}
-.button {
-  position: absolute;
-  top: 25vh;
-  right: 3vw;
 }
 </style>

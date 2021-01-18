@@ -38,19 +38,19 @@ export default {
   mounted () {
     this.setCurrentExamToVuex()
     setCurrentQuestion(this.id, {})
-    this.watchPlayerAnswer()
+    // this.watchPlayerAnswer()
     this.$bus.$on('saveCurrentQuestionToVuex', () => {
       this.saveCurrentQuestionToVuex()
     })
   },
-  // watch: {
-  //   '$store.state.timesOut' () {
-  //     const timeOut = this.$store.state.timesOut
-  //     if (timeOut) {
-  //       this.getPlayerInfo()
-  //     }
-  //   }
-  // },
+  watch: {
+    '$store.state.timesOut' () {
+      const timeOut = this.$store.state.timesOut
+      if (timeOut) {
+        this.getPlayerInfo()
+      }
+    }
+  },
   methods: {
     ...mapMutations(['saveCurrentExam', 'savecurrentQuestion']),
     async setCurrentExamToVuex () {
@@ -80,18 +80,26 @@ export default {
       console.log('getInfo')
       // const playerInfo = []
       const player = db.collection('player')
-      player.orderBy('answerTime', 'asc').onSnapshot(res => {
-        res.forEach(data => {
-          if (!this.playerInfo.includes(data.data().playerName)) this.playerInfo.push(data.data())
-          console.log('ele: ', data.data())
+      console.log('in: ', this.questionIndex)
+      player.where('questionIndex', '==', this.questionIndex).orderBy('answerTime').onSnapshot((ele) => {
+        console.log('ee: ', this.questionIndex)
+        ele.forEach(data => {
+          console.log('startExamd: ', data.data())
         })
+      // if (!this.playerlist.includes(data.data().playerName)) this.playerlist.push(data.data().playerName)
       })
+      // player.orderBy('answerTime', 'asc').onSnapshot(res => {
+      //   res.forEach(data => {
+      //     if (!this.playerInfo.includes(data.data().playerName)) this.playerInfo.push(data.data())
+      //     console.log('ele: ', data.data())
+      //   })
+      // })
     },
     unsubscribe () {
-      const playerRef = db.collection('player')
-      playerRef.where('questionIndex', '==', this.previosIndex).orderBy('answerTime', 'asc').onSnapshot(res => {
-        console.log('noo: ', this.previosIndex)
-      })
+      // const playerRef = db.collection('player')
+      // playerRef.where('questionIndex', '==', this.previosIndex).orderBy('answerTime', 'asc').onSnapshot(res => {
+      // console.log('noo: ', this.previosIndex)
+      // })
     }
   }
 }

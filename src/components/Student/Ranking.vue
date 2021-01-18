@@ -5,16 +5,13 @@
       <div class="result-text">恭喜答對了，繼續加油!</div>
       <div class="result-text">
         <span>
-          分數
+          答對題數
         </span>
         <span class="score-text">
           + {{ score }}
           <span class="score-animation">
           + {{ score }}
         </span>
-        </span>
-        <span>
-          分
         </span>
       </div>
     </div>
@@ -37,11 +34,11 @@ export default {
     return {
       correct,
       wrong,
-      score: 10
+      score: 1
     }
   },
   created () {
-    if (this.myResult) this.$emit('setAddScore', 10)
+    if (this.myResult) this.$emit('setAddScore', 1)
   }
 }
 </script>

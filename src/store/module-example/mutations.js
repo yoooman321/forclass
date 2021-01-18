@@ -65,6 +65,7 @@ export function savecurrentQuestion (state) {
 }
 export function changeTimeOutFlag (state, flag) {
   state.timesOut = flag
+  console.log('ggg')
   window.setTimeout(() => {
     changeStaticFlag(state, flag)
   }, 2000)
@@ -81,4 +82,14 @@ export function examIsFinished (state) {
 }
 export function updateTitleImage (state, url) {
   state.questionTitleImage = url
+}
+export function updatePlayerAnswerList (state, playerName) {
+  state.playerAnswerList.push(playerName)
+  console.log('ddd: ', state.playerAnswerList)
+}
+export function cleanPlayerAnswerList (state) {
+  state.playerAnswerList = []
+}
+export function addStudentQuestionIndex (state) {
+  state.studentQuestionIndex++
 }

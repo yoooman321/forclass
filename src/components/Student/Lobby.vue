@@ -69,7 +69,8 @@ export default {
         playerName: this.name,
         score: 0,
         answerTime: 0,
-        answer: []
+        answer: [],
+        questionIndex: -1
       })
         .then(() => {
           this.$emit('setNickName', this.name)

@@ -18,10 +18,12 @@ export default {
   },
   methods: {
     next () {
-      deleteCurrentExam(this.id)
-      deleteQuestion(this.id)
       window.close()
     }
+  },
+  created () {
+    deleteCurrentExam(this.id)
+    deleteQuestion(this.id)
   },
   components: {
     Rank
