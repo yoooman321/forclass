@@ -1,8 +1,8 @@
 <template>
   <div class='player-answer-list'>
     玩家已作答：
-    <transition-group name="fade">
-      <li style="list-style-type:none;" v-for="(elements, index) in playerList" :key="index+elements">
+    <transition-group name="fade" class="playerList-ul">
+      <li class="li" style="list-style-type:none;" v-for="(elements, index) in playerList" :key="index+elements">
         <span>{{elements}}</span>
       </li>
     </transition-group>
@@ -39,12 +39,8 @@ export default {
       // const playerInfo = []
       const index = this.index - 1
       const player = db.collection('player')
-      console.log('in: ', index)
       player.where('questionIndex', '==', index).orderBy('answerTime').onSnapshot((ele) => {
-        console.log('ee: ', this.index)
         ele.forEach(data => {
-          console.log('data: ', data.data().playerName)
-          console.log('g: ', this.playerList)
           if (!this.playerList.includes(data.data().playerName)) this.playerList.push(data.data().playerName)
         })
       // if (!this.playerlist.includes(data.data().playerName)) this.playerlist.push(data.data().playerName)
@@ -70,9 +66,27 @@ export default {
   opacity: 0;
 }
 .player-answer-list {
-  /* height: 28vh; */
   border: 1px solid black;
   border-radius: 4px;
   padding: 1vh 1vw;
+}
+.playerList-ul {
+  display: flex;
+  padding-left: 0px;
+  flex-direction: column;
+  margin: 0;
+  flex-wrap: wrap;
+  height: 91%;
+  overflow: hidden;
+}
+.li {
+  font-size: 1em;
+  max-width: 20%;
+  box-sizing: border-box;
+  padding-right: 10px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
 }
 </style>

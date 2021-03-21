@@ -12,6 +12,7 @@ import Ranking from './Pages/Ranking'
 import { getCurrentExamData, setCurrentQuestion, getPlayerInfo } from 'src/backend/index'
 import { db } from 'src/boot/serverConnection'
 import { mapMutations } from 'vuex'
+import { deleteCurrentExam, deleteQuestion } from 'src/backend/index.js'
 export default {
   components: {
     Lobby,
@@ -36,12 +37,15 @@ export default {
     }
   },
   mounted () {
-    this.setCurrentExamToVuex()
-    setCurrentQuestion(this.id, {})
     // this.watchPlayerAnswer()
     this.$bus.$on('saveCurrentQuestionToVuex', () => {
       this.saveCurrentQuestionToVuex()
     })
+  },
+  created () {
+    this.setCurrentExamToVuex()
+    setCurrentQuestion(this.id, {})
+    window.addEventListener('beforeunload', this.deleteFireBase)
   },
   watch: {
     '$store.state.timesOut' () {
@@ -94,6 +98,10 @@ export default {
       //     console.log('ele: ', data.data())
       //   })
       // })
+    },
+    deleteFireBase () {
+      deleteCurrentExam(this.id)
+      deleteQuestion(this.id)
     },
     unsubscribe () {
       // const playerRef = db.collection('player')

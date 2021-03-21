@@ -1,10 +1,7 @@
 <template>
   <div class="ranking">
     <h3 class="title">最終結果</h3>
-    <rank :players="players"></rank>
-    <div class="btn">
-       <q-btn color="primary" label="結束" size="xl" @click="next"></q-btn>
-    </div>
+    <rank :topTenPlayers="topTenPlayers" :test="players"></rank>
   </div>
 </template>
 <script>
@@ -16,14 +13,30 @@ export default {
       type: Array
     }
   },
+  data () {
+    return {
+      id: this.$route.params.id,
+      topTenPlayers: []
+    }
+  },
   methods: {
-    next () {
-      window.close()
+    orderPlayerByScore () {
+      this.players.sort((a, b) => (a.score > b.score) ? -1 : ((b.score > a.score) ? 1 : 0))
+    },
+    spiceTopTenPlayers () {
+      this.topTenPlayers = this.players.length > 10 ? this.players.splice(0, 10) : this.players.splice(0, this.players.length)
+    }
+  },
+  computed: {
+    players () {
+      return this.playerInfo
     }
   },
   created () {
     deleteCurrentExam(this.id)
     deleteQuestion(this.id)
+    this.orderPlayerByScore()
+    this.spiceTopTenPlayers()
   },
   components: {
     Rank
@@ -43,9 +56,13 @@ export default {
 .title {
   text-align: center;
   font-weight: bold;
+  font-size: 2.5em;
+  height: 5vh;
 }
 .btn {
   margin-top: 2vh;
   text-align: center;
+  height: 5vh;
+  box-sizing: border-box;
 }
 </style>

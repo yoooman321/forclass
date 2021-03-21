@@ -1,7 +1,7 @@
 <template>
   <div class="ranking">
     <h3 class="title">目前戰況</h3>
-    <rank :players="players"></rank>
+      <rank :topTenPlayers="topTenPlayers" :test="players"></rank>
     <div class="btn">
        <q-btn color="primary" label="下一題" size="xl" @click="next"></q-btn>
     </div>
@@ -20,7 +20,8 @@ export default {
   },
   data () {
     return {
-      id: this.$route.params.id
+      id: this.$route.params.id,
+      topTenPlayers: []
     }
   },
   computed: {
@@ -28,8 +29,9 @@ export default {
       return this.playerInfo
     }
   },
-  mounted () {
+  created () {
     this.orderPlayerByScore()
+    this.spiceTopTenPlayers()
   },
   methods: {
     orderPlayerByScore () {
@@ -38,6 +40,9 @@ export default {
     next () {
       this.$bus.$emit('saveCurrentQuestionToVuex')
       this.$store.dispatch('changePage', { examID: this.id, studentPage: 'animation-transition', teacherPage: 'animation-transition' })
+    },
+    spiceTopTenPlayers () {
+      this.topTenPlayers = this.players.length > 10 ? this.players.splice(0, 10) : this.players.splice(0, this.players.length)
     }
   },
   components: {
@@ -58,9 +63,14 @@ export default {
 .title {
   text-align: center;
   font-weight: bold;
+  font-size: 2.5em;
+  height: 5vh;
 }
 .btn {
   margin-top: 2vh;
   text-align: center;
+  height: 5vh;
+  box-sizing: border-box;
 }
+
 </style>
