@@ -22,8 +22,8 @@
   </div>
 </template>
 <script>
-import correct from 'src/assets/student_correct.png'
-import wrong from 'src/assets/student_wrong.png'
+import correct from 'src/assets/images/student_correct.png'
+import wrong from 'src/assets/images/student_wrong.png'
 export default {
   props: {
     myResult: {

@@ -1,8 +1,5 @@
 <template>
   <div class="question">
-    <!-- <audio autoplay loop :src="music" ref="au" muted> -->
-      <!-- <source :src="music" type="audio/mpeg"> -->
-    <!-- </audio> -->
     <div class="top">
       <question-part :title="currentQuestion.questionTitle"></question-part>
     </div>
@@ -30,8 +27,7 @@ import QuestionPart from 'src/components/Games/QuestionPart/QuestionPart'
 import AnswersPart from 'src/components/Games/AnswersPart/AnswersPart'
 import Statistics from 'src/components/Games/Statistics/Statistics'
 import PlayerAnswerList from 'src/components/Games/Rank/PlayerAnswerList'
-import music from 'src/assets/Tin_Spirit.mp3'
-import counted from 'src/assets/counted.mp3'
+import music from 'src/assets/music/crrect_answer3.mp3'
 export default {
   props: {
     questionIndex: {
@@ -45,14 +41,12 @@ export default {
     return {
       bgColor: ['#FEEFE5', '#DDE7C7', '#FF8CC6', '#FEF9FF', '#C8EAD3', '#BAD7F2', '#FFA5AB', '#FFC857'],
       ranktime: false,
-      music,
       id: this.$route.params.id,
       started: false,
       lobby: false,
       transitions: true,
-      counted,
-      backGroundSound: new Audio(music),
-      currentQuestion: this.$store.state.currentQuestion
+      currentQuestion: this.$store.state.currentQuestion,
+      music
     }
   },
   computed: {
@@ -66,6 +60,12 @@ export default {
   watch: {
     timeOut () {
       if (this.timeOut) this.$store.dispatch('changePage', { examID: this.id, studentPage: 'ranking', teacherPage: 'question' })
+    },
+    staticFlag () {
+      if (this.staticFlag) {
+        const audio = new Audio(this.music)
+        audio.play()
+      }
     }
   },
   components: {
@@ -101,33 +101,6 @@ export default {
       }
       // this.$bus.$emit('playBackgroundMusic')
     }
-  },
-  created () {
-    this.$bus.$on('playCountedSound', () => {
-      setTimeout(() => {
-        const myAudio = new Audio(this.counted)
-        myAudio.play()
-        this.stopPlay()
-      }, 3200)
-    })
-    this.$bus.$on('playBackgroundMusic', () => {
-      this.started = false
-      this.lobby = false
-      this.transitions = true
-      // setTimeout(() => {
-      //   this.transitions = false
-      //   this.started = true
-      // }, 3000)
-      // this.backGroundSound.play()
-    })
-    this.$bus.$on('changeState', () => {
-      this.started = true
-      this.transitions = false
-    })
-  },
-  beforeDestroy () {
-    this.$bus.$off('playCountedSound')
-    this.$bus.$off('playBackgroundMusic')
   }
 }
 </script>

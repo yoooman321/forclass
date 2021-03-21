@@ -66,7 +66,7 @@ export default {
 .animation-transition {
   height: 100vh;
   width: 100vw;
-  background: url('../../../../assets/bg.png');
+  background: url('../../../../assets/images/bg.png');
   background-size: 100vw 100vh;
   background-repeat: no-repeat;
   position: relative;

@@ -29,13 +29,6 @@ export default {
   },
   mounted () {
     this.location = document.location
-  },
-  methods: {
-    play () {
-      this.$emit('playAudio')
-      this.$bus.$emit('playBackgroundMusic')
-      this.$bus.$emit('playCountedSound')
-    }
   }
 }
 </script>

@@ -121,11 +121,9 @@ export function deleteQuestion (examID) {
     })
 }
 export function deleteExam (examID) {
-  db.collection('questions').doc(String(examID)).delete()
-    .then(() => {
-      return true
-    })
-    .catch(err => console.log('err: ', err))
+  return db.collection('questions').doc(String(examID)).delete()
+    .then(() => true)
+    .catch(() => false)
 }
 export function sendAnswer (playerID, answer, score, answerTime, questionIndex) {
   console.log('send Answer obj: ', {

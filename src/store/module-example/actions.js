@@ -1,8 +1,23 @@
 import { db } from 'src/boot/serverConnection'
 import { deleteExam, setWhichPage } from 'src/backend/index'
+import { Notify } from 'quasar'
 export async function deleteItem (context, index) {
   const deleteSuccess = await deleteExam(index)
-  if (deleteSuccess) context.commit('deleteExam', index)
+  if (deleteSuccess) {
+    context.commit('deleteExam', index)
+    Notify.create({
+      message: '刪除成功',
+      type: 'positive',
+      timeout: 1000
+    })
+    return
+  }
+  Notify.create({
+    message: '刪除失敗',
+    type: 'negative',
+    icon: 'warning',
+    timeout: 1000
+  })
 }
 export function getExamList (context) {
   const exam = db.collection('questions')

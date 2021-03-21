@@ -7,10 +7,10 @@
   </div>
 </template>
 <script>
-import rankOne from 'src/assets/rankOne.png'
-import rankTwo from 'src/assets/rankTwo.png'
-import rankThree from 'src/assets/rankThree.png'
-import rankOthers from 'src/assets/rankOthers.png'
+import rankOne from 'src/assets/images/rankOne.png'
+import rankTwo from 'src/assets/images/rankTwo.png'
+import rankThree from 'src/assets/images/rankThree.png'
+import rankOthers from 'src/assets/images/rankOthers.png'
 import { db } from 'src/boot/serverConnection'
 export default {
   props: {

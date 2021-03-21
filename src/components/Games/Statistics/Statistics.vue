@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import fantastic from 'src/assets/fantastic.png'
+import fantastic from 'src/assets/images/fantastic.png'
 import * as d3 from 'd3'
 export default {
   props: {
@@ -41,6 +41,7 @@ export default {
     },
     drawing () {
       // const self = this
+      const color = this.$store.state.optionListSetting
       const svg = d3.select('.statistic').append('svg').style('width', '60vw').style('height', '35vh').attr('transform', 'translate(20, 20)')
       svg.append('g').attr('text-anchor', 'middle')
       const width = parseInt(d3.select('.statistic').style('width')) - 80
@@ -61,13 +62,16 @@ export default {
         .attr('width', x.bandwidth())
         .attr('y', function (d) { return y(d.value) })
         .attr('height', function (d) { return height - y(d.value) })
+        .attr('fill', function (d, index) {
+          return color[index].bgColor
+        })
       bars.append('text').attr('text-anchor', 'middle').text(function (d) {
         return d.value
       }).attr('x', function (d) {
         return x(d.name) + x.bandwidth() / 2
       }).attr('y', function (d) {
         return y(d.value) - 5
-      }).style('fill', 'red').style('font-size', '20px').style('font-weight', 'bold')
+      }).style('fill', '#251605').style('font-size', '20px').style('font-weight', 'bold')
       // add the x Axis
       svg.append('g').attr('transform', 'translate(0,' + (height + 20) + ')').call(d3.axisBottom(x)).style('font-size', '25px').style('padding-top', '10px')
     }

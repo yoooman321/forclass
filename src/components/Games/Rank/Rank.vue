@@ -1,7 +1,7 @@
 <template>
   <div class="ranking-list">
       <div class="topTen">
-        <div class="topTen-title">前十名榜單</div>
+        <div class="topTen-title">前十名榜單(答對題數)</div>
         <div class="member member-topTen" v-for="(tt, index) in topTenPlayers" :key="tt.playerName">
           <div class="rank-text">
             <div>
@@ -11,7 +11,7 @@
               第{{ index+1 }} 名：
             </div>
           </div>
-          <div> {{ tt.playerName }} </div>
+          <div> {{ tt.playerName }}({{tt.score}}) </div>
         </div>
       </div>
       <div class="otherRank">
@@ -25,9 +25,9 @@
     </div>
 </template>
 <script>
-import GoldCrown from 'src/assets/goldCrown.png'
-import SliverCrown from 'src/assets/SliverCrown.png'
-import BronzeCrown from 'src/assets/bronzeCrown.png'
+import GoldCrown from 'src/assets/images/goldCrown.png'
+import SliverCrown from 'src/assets/images/SliverCrown.png'
+import BronzeCrown from 'src/assets/images/bronzeCrown.png'
 export default {
   props: {
     topTenPlayers: {

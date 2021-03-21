@@ -34,8 +34,8 @@
   </div>
 </template>
 <script>
-import welcome from 'src/assets/welcome.png'
-import time from 'src/assets/time.png'
+import welcome from 'src/assets/images/welcome.png'
+import time from 'src/assets/images/time.png'
 import { db } from 'src/boot/serverConnection'
 export default {
   props: ['nickName'],

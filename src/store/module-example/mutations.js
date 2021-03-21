@@ -85,7 +85,6 @@ export function updateTitleImage (state, url) {
 }
 export function updatePlayerAnswerList (state, playerName) {
   state.playerAnswerList.push(playerName)
-  console.log('ddd: ', state.playerAnswerList)
 }
 export function cleanPlayerAnswerList (state) {
   state.playerAnswerList = []

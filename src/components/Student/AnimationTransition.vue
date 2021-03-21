@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import blackBoard from 'src/assets/blackboard.png'
+import blackBoard from 'src/assets/images/blackboard.png'
 export default {
   data () {
     return {

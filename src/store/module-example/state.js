@@ -16,14 +16,14 @@ export default function () {
       ]
     },
     optionListSetting: [
-      { number: 'A', bgColor: 'green' },
-      { number: 'B', bgColor: 'yellow' },
-      { number: 'C', bgColor: 'blue' },
-      { number: 'D', bgColor: 'red' },
-      { number: 'E', bgColor: 'white' },
-      { number: 'F', bgColor: 'white' },
-      { number: 'G', bgColor: 'white' },
-      { number: 'H', bgColor: 'white' }
+      { number: 'A', bgColor: '#4D9DE0' },
+      { number: 'B', bgColor: '#E15554' },
+      { number: 'C', bgColor: '#E1BC29' },
+      { number: 'D', bgColor: '#3BB273' },
+      { number: 'E', bgColor: '#7768AE' },
+      { number: 'F', bgColor: '#191919' },
+      { number: 'G', bgColor: '#0B3948' },
+      { number: 'H', bgColor: '#251605' }
     ],
     oldExamList: [],
     currentExam: [],

@@ -1,7 +1,6 @@
 <template>
 <div class="main" v-if="!finished">
-  <!-- <audio id="video" :src="music" muted></audio> -->
-  <!-- <template v-if="!finished"> -->
+  <audio autoplay loop :src="music" ref="au" muted></audio>
   <template>
     <div class="time" :style="gradient">
       {{display}}
@@ -11,6 +10,8 @@
 </template>
 <script>
 import { DateTime, Duration } from 'luxon'
+import countMusic from 'src/assets/music/counted.mp3'
+import music from 'src/assets/music/bgm.mp3'
 export default {
   props: ['time'],
   data () {
@@ -19,7 +20,9 @@ export default {
       now: DateTime.local(),
       end: DateTime.local().plus({ seconds: this.time }),
       tick: null,
-      counted: false
+      counted: false,
+      countMusic,
+      music
     }
   },
   watch: {
@@ -27,6 +30,14 @@ export default {
       if (this.finished) {
         clearInterval(this.tick)
         this.$store.dispatch('changeTimeOutFlag', true)
+      }
+    },
+    display () {
+      if (this.display === '04') {
+        setTimeout(() => {
+          const myAudio = new Audio(this.countMusic)
+          myAudio.play()
+        }, 500)
       }
     }
   },

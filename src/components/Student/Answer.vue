@@ -9,7 +9,7 @@
         @click="chooseAnswer(index)"
       >
         <div>{{ answerOptions[index].number }}</div>
-        <q-icon v-if="myAnswer.includes(index)" class="material-icons text-green done" style="font-size: 5rem;">
+        <q-icon v-if="myAnswer.includes(index)" class="material-icons text-black done" style="font-size: 5rem;">
           done
         </q-icon>
       </div>

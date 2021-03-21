@@ -47,7 +47,7 @@ export default {
 .ranking {
   height: 100vh;
   width: 100vw;
-  background: url('../../../../assets/rankingBG.jpg');
+  background: url('../../../../assets/images/rankingBG.jpg');
   background-size: 100vw 100vh;
   background-repeat: repeat;
   position: relative;
