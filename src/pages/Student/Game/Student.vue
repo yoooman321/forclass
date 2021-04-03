@@ -24,6 +24,8 @@
           :myScore="myScore"
           @getResult="getResult"
           :addScore="addScore"
+          :rankList="rankList"
+          :nickName="nickName"
         >
         <!-- :questionIndex="questionIndex" -->
         </component>
@@ -48,6 +50,7 @@ import Answer from 'src/components/Student/Answer'
 import Ranking from 'src/components/Student/Ranking'
 import Final from 'src/components/Student/Final'
 import { db } from 'src/boot/serverConnection'
+import { getRankList } from 'src/backend/index'
 export default {
   data () {
     return {
@@ -63,8 +66,8 @@ export default {
       finalScore: 0,
       currentQuestion: {},
       showPage: false,
-      addScore: 0
-      // questionIndex: 0
+      addScore: 0,
+      rankList: {}
     }
   },
   components: {
@@ -79,6 +82,9 @@ export default {
       this.waitForTimeOut = false
       this.answerButtonDisabled = true
       this.$q.loading.hide()
+      if (this.whichPage === 'final') {
+        this.getRank()
+      }
     },
     finalScore () {
       // if (this.addScore === this.myScore) return
@@ -150,6 +156,9 @@ export default {
     getResult (score, result) {
       this.myResult = result
       this.addScore = score
+    },
+    async getRank () {
+      this.rankList = await getRankList(this.id)
     }
   }
 }

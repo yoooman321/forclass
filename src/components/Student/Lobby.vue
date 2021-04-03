@@ -59,12 +59,26 @@ export default {
     this.$bus.$off('changeView')
   },
   methods: {
-    enterGame () {
+    async enterGame () {
       this.$refs.nickName.validate()
       if (this.$refs.nickName.hasError) return
       if (!this.avoidDoubleRequest) return
       this.avoidDoubleRequest = false
       const newID = Math.floor(Math.random() * 1000000)
+      let checkDuplicate = false
+      await db.collection('player').where('playerName', '==', this.nickName).get().then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          checkDuplicate = true
+        })
+      })
+      if (checkDuplicate) {
+        this.avoidDoubleRequest = true
+        this.$q.notify({
+          message: '此暱稱重複',
+          type: 'warning'
+        })
+        return
+      }
       db.collection('player').doc(String(newID)).set({
         playerName: this.name,
         score: 0,

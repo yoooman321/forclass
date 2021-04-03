@@ -1,7 +1,7 @@
 <template>
   <div class="ranking">
     <h3 class="title">最終結果</h3>
-    <rank :topTenPlayers="topTenPlayers" :test="players"></rank>
+    <rank :rank="rankList"></rank>
   </div>
 </template>
 <script>
@@ -9,34 +9,18 @@ import Rank from 'src/components/Games/Rank/Rank'
 import { deleteCurrentExam, deleteQuestion } from 'src/backend/index'
 export default {
   props: {
-    playerInfo: {
-      type: Array
+    rankList: {
+      type: Object
     }
   },
   data () {
     return {
-      id: this.$route.params.id,
-      topTenPlayers: []
-    }
-  },
-  methods: {
-    orderPlayerByScore () {
-      this.players.sort((a, b) => (a.score > b.score) ? -1 : ((b.score > a.score) ? 1 : 0))
-    },
-    spiceTopTenPlayers () {
-      this.topTenPlayers = this.players.length > 10 ? this.players.splice(0, 10) : this.players.splice(0, this.players.length)
-    }
-  },
-  computed: {
-    players () {
-      return this.playerInfo
+      id: this.$route.params.id
     }
   },
   created () {
     deleteCurrentExam(this.id)
     deleteQuestion(this.id)
-    this.orderPlayerByScore()
-    this.spiceTopTenPlayers()
   },
   components: {
     Rank

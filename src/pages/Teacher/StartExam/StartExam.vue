@@ -1,6 +1,6 @@
 <template>
   <div>
-    <component :is="whichPage" :id="id" :questionIndex="questionIndex" :playerInfo="playerInfo"></component>
+    <component :is="whichPage" :id="id" :questionIndex="questionIndex" :playerInfo="playerInfo" :rankList="rankList"></component>
   </div>
 </template>
 <script>
@@ -9,10 +9,10 @@ import AnimationTransition from './Pages/AnimationTransition'
 import Question from './Pages/Question'
 import GameFinish from './Pages/GameFinish'
 import Ranking from './Pages/Ranking'
-import { getCurrentExamData, setCurrentQuestion, getPlayerInfo } from 'src/backend/index'
+import { getCurrentExamData, setCurrentQuestion, getPlayerInfo, alignRankList } from 'src/backend/index'
 import { db } from 'src/boot/serverConnection'
 import { mapMutations } from 'vuex'
-import { deleteCurrentExam, deleteQuestion } from 'src/backend/index.js'
+import { deleteCurrentExam, deleteQuestion, deleteRankList } from 'src/backend/index.js'
 export default {
   components: {
     Lobby,
@@ -28,7 +28,8 @@ export default {
       questionIndex: 0,
       titleImageUrl: '',
       playerInfo: [],
-      previosIndex: -1
+      previosIndex: -1,
+      rankList: {}
     }
   },
   computed: {
@@ -79,16 +80,13 @@ export default {
     },
     async getPlayerInfo () {
       this.playerInfo = await getPlayerInfo()
+      this.rankList = await alignRankList(this.playerInfo, this.id)
     },
     watchPlayerAnswer () {
-      console.log('getInfo')
       // const playerInfo = []
       const player = db.collection('player')
-      console.log('in: ', this.questionIndex)
       player.where('questionIndex', '==', this.questionIndex).orderBy('answerTime').onSnapshot((ele) => {
-        console.log('ee: ', this.questionIndex)
         ele.forEach(data => {
-          console.log('startExamd: ', data.data())
         })
       // if (!this.playerlist.includes(data.data().playerName)) this.playerlist.push(data.data().playerName)
       })
@@ -102,6 +100,7 @@ export default {
     deleteFireBase () {
       deleteCurrentExam(this.id)
       deleteQuestion(this.id)
+      deleteRankList(this.id)
     },
     unsubscribe () {
       // const playerRef = db.collection('player')

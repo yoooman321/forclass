@@ -2,7 +2,7 @@
   <div class="final-result">
     <div class="title">結束出爐</div>
     <div class="content">您的分數： {{ myScore }}</div>
-    <div class="content">您的名次： {{ rank }}</div>
+    <div class="content">您的名次： {{ myRank[0] }}</div>
     <img :src="rankImage" />
   </div>
 </template>
@@ -19,6 +19,12 @@ export default {
     },
     myScore: {
       type: Number
+    },
+    rankList: {
+      type: Object
+    },
+    nickName: {
+      type: String
     }
   },
   data () {
@@ -28,12 +34,10 @@ export default {
       rankOne,
       rankTwo,
       rankThree,
-      rankOthers,
-      rankImage: ''
+      rankOthers
     }
   },
-  mounted () {
-    if (this.myResult) this.$emit('setAddScore', 10)
+  created () {
     switch (this.rank) {
       case 1:
         this.rankImage = this.rankOne
@@ -55,6 +59,25 @@ export default {
       const playerID = localStorage.getItem('playerID')
       db.collection('player').doc(String(playerID)).delete()
       localStorage.removeItem('playerID')
+    }
+  },
+  computed: {
+    myRank () {
+      return Object.keys(this.rankList).filter(ele => {
+        return this.rankList[ele].find(t => t === this.nickName)
+      })
+    },
+    rankImage () {
+      switch (this.myRank[0]) {
+        case '1':
+          return this.rankOne
+        case '2':
+          return this.rankTwo
+        case '3':
+          return this.rankThree
+        default:
+          return this.rankOthers
+      }
     }
   }
 }

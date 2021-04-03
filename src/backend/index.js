@@ -92,8 +92,6 @@ export function getImageName (titleImage, answerImage) {
   return { titleImageUrl, answerImageUrl }
 }
 export function getImageUrl (path, fileName) {
-  console.log('path: ', path)
-  console.log('fileNmae: ', fileName)
   const storageRef = storage.ref(path + '/' + fileName)
   return storageRef.getDownloadURL()
     .then(res => {
@@ -126,12 +124,6 @@ export function deleteExam (examID) {
     .catch(() => false)
 }
 export function sendAnswer (playerID, answer, score, answerTime, questionIndex) {
-  console.log('send Answer obj: ', {
-    answer,
-    answerTime,
-    score,
-    questionIndex
-  })
   db.collection('player').doc(String(playerID)).update({
     answer,
     answerTime,
@@ -143,9 +135,37 @@ export function sendAnswer (playerID, answer, score, answerTime, questionIndex) 
 export async function getPlayerInfo () {
   const playerInfo = []
   const player = db.collection('player')
-  const res = await player.orderBy('answerTime', 'asc').get()
+  const res = await player.orderBy('score', 'desc').get()
   res.forEach(ele => {
     playerInfo.push(ele.data())
   })
   return playerInfo
+}
+export function alignRankList (playerInfo, id) {
+  const rankList = playerInfo.reduce((acc, cur, index) => {
+    const hasProperty = Object.prototype.hasOwnProperty.call(acc, cur.score)
+    hasProperty ? acc[cur.score].push(cur.playerName) : acc[cur.score] = [cur.score, cur.playerName]
+    return acc
+  }, {})
+  const numberArray = Object.keys(rankList)
+  numberArray.sort((a, b) => (a > b) ? -1 : ((b > a) ? 1 : 0))
+  const rank = numberArray.reduce((acc, cur, index) => {
+    return { ...acc, [index + 1]: rankList[cur] }
+  }, {})
+  return db.collection('rankList').doc(String(id)).set(rank)
+    .then(() => {
+      return rank
+    })
+}
+export function getRankList (examID) {
+  return db.collection('rankList').doc(examID).get()
+    .then(ele => {
+      return ele.data()
+    })
+}
+export function deleteRankList (examID) {
+  db.collection('rankList').doc(String(examID)).delete()
+    .then(() => {
+      console.log('delete successfully!')
+    })
 }

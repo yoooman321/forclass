@@ -1,7 +1,7 @@
 <template>
   <div class="ranking">
     <h3 class="title">目前戰況</h3>
-      <rank :topTenPlayers="topTenPlayers" :test="players"></rank>
+      <rank :rank="rankList"></rank>
     <div class="btn">
        <q-btn color="primary" label="下一題" size="xl" @click="next"></q-btn>
     </div>
@@ -14,35 +14,19 @@ export default {
     questionIndex: {
       type: Number
     },
-    playerInfo: {
-      type: Array
+    rankList: {
+      type: Object
     }
   },
   data () {
     return {
-      id: this.$route.params.id,
-      topTenPlayers: []
+      id: this.$route.params.id
     }
-  },
-  computed: {
-    players () {
-      return this.playerInfo
-    }
-  },
-  created () {
-    this.orderPlayerByScore()
-    this.spiceTopTenPlayers()
   },
   methods: {
-    orderPlayerByScore () {
-      this.players.sort((a, b) => (a.score > b.score) ? -1 : ((b.score > a.score) ? 1 : 0))
-    },
     next () {
       this.$bus.$emit('saveCurrentQuestionToVuex')
       this.$store.dispatch('changePage', { examID: this.id, studentPage: 'animation-transition', teacherPage: 'animation-transition' })
-    },
-    spiceTopTenPlayers () {
-      this.topTenPlayers = this.players.length > 10 ? this.players.splice(0, 10) : this.players.splice(0, this.players.length)
     }
   },
   components: {

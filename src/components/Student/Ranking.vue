@@ -54,7 +54,7 @@ export default {
     left 0px
   100%
     top calc(50vh - 80px)
-    left 35vw
+    left 30vw
 .ranking
   text-align center
   .result-img
@@ -70,7 +70,7 @@ export default {
       .score-animation
         position absolute
         width 50px
-        left -3px
+        left -9px
         top -3px
         animation-name addScore
         animation-delay .5s
