@@ -4,8 +4,8 @@
       <div class="text">
         掃描QR Code進入遊戲
       </div>
-      <vue-qrcode  :value="location + id "  />
-      <div class="text"> or  輸入網址：localhost:8080/play/{{ id }} </div>
+      <vue-qrcode  :value="location"  />
+      <div class="text"> or  輸入網址：{{ location }} </div>
     </div>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
   },
   data () {
     return {
-      loacation: document.location
+      location: ''
       // currentExamID: this.$store.state.currentExam
     }
   },

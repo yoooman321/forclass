@@ -72,7 +72,13 @@ export default {
       // need add notify
       await addQuesionToFirebase(finalExam)
       this.$q.loading.hide()
+      this.$q.notify({
+        type: 'positive',
+        message: '新增成功！',
+        position: 'top-right'
+      })
       this.avoidDoubleClick = false
+      this.$router.push('/old')
     },
     resetForm () {
       this.$bus.$emit('reset')
