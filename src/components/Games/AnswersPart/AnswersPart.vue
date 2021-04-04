@@ -8,7 +8,7 @@
       :class="{lastans: (index === options.length-1 && options.length % 2 === 1), isAnswer: (ans.isAnswer === false && timeOut)}"
       >
       <div class="selection">{{ansStyle[index].number}}</div>
-      <div v-if="ans.type === '文字'"> {{ans.value}} </div>
+      <div v-if="ans.value"> {{ans.value}} </div>
       <div v-else>
         <img class="answer-img" :src="ans.imageUrl">
       </div>
@@ -48,7 +48,7 @@ export default {
 }
 .selection {
   display: inline-block;
-  margin-right: 1vw;
+  /* margin-right: 1vw; */
 }
 .lastans {
   width: 100vw;

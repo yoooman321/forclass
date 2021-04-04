@@ -10,7 +10,7 @@
       active-class="active"
     >
       <q-item-section side>
-        <q-icon v-if="option.value" name="radio_button_unchecked"></q-icon>
+        <q-icon v-if="option.value !== 'X'" name="radio_button_unchecked"></q-icon>
         <q-icon v-else name="close"></q-icon>
       </q-item-section>
     </q-item>
@@ -28,10 +28,11 @@ export default {
   data () {
     return {
       options: [{
-        value: true,
+        value: 'O',
         isAnswer: false
-      }, {
-        value: false,
+      },
+      {
+        value: 'X',
         isAnswer: false
       }]
     }
