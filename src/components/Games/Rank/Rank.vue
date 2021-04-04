@@ -54,6 +54,7 @@ export default {
 }
 .member {
   display: inline-block;
+  font-size: 1rem;
 }
 .member-afterThree {
   padding-left: 28px;

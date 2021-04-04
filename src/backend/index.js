@@ -11,20 +11,23 @@ const getQuestionUrlFromFirebase = async (imgObject, type = 'questions') => {
 
 const addImageToFirebase = async questions => {
   for (let i = 0; i < questions.length; i++) {
-    if (!questions[i].questionTitleImage) continue
-    const question = questions[i]
-    const { options } = question
-    const url = await getQuestionUrlFromFirebase(question.questionTitleImage)
-    question.imageUrl = url
+    let question = {}
+    if (questions[i].questionTitleImage) {
+      question = questions[i]
+      const url = await getQuestionUrlFromFirebase(question.questionTitleImage)
+      question.imageUrl = url
+    }
+    const { options } = questions[i]
     await addAnswerImageToFirebase(options)
   }
 }
 const addAnswerImageToFirebase = async options => {
   for (let i = 0; i < options.length; i++) {
-    if (options[i].type !== '圖片') continue
-    const option = options[i]
-    const url = await getQuestionUrlFromFirebase(option.file, 'answers')
-    option.imageUrl = url
+    if (options[i].file) {
+      const option = options[i]
+      const url = await getQuestionUrlFromFirebase(option.file, 'answers')
+      option.imageUrl = url
+    }
   }
 }
 

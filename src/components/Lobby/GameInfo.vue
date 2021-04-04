@@ -27,8 +27,8 @@ export default {
   components: {
     VueQrcode
   },
-  mounted () {
-    this.location = document.location
+  created () {
+    this.location = 'http://' + window.location.hostname + '/#/play/' + this.id
   }
 }
 </script>

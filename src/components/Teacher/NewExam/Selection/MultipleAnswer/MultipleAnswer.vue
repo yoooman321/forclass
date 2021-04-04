@@ -57,7 +57,7 @@ export default {
   methods: {
     ...mapMutations(['changeOptions']),
     setOptions () {
-      this.changeOptions([JSON.parse(JSON.stringify(this.options)), this.questionIndex])
+      this.changeOptions([this.options, this.questionIndex])
     },
     AddOption () {
       this.options = [...this.options, { value: '', isAnswer: false, type: '文字', file: null }]
