@@ -63,6 +63,7 @@ export default {
       this.$refs.nickName.validate()
       if (this.$refs.nickName.hasError) return
       if (!this.avoidDoubleRequest) return
+      this.$q.loading.show({ message: '請稍等' })
       this.avoidDoubleRequest = false
       const newID = Math.floor(Math.random() * 1000000)
       let checkDuplicate = false
@@ -72,6 +73,7 @@ export default {
         })
       })
       if (checkDuplicate) {
+        this.$q.loading.hide()
         this.avoidDoubleRequest = true
         this.$q.notify({
           message: '此暱稱重複',
@@ -90,14 +92,17 @@ export default {
           this.$emit('setNickName', this.name)
           localStorage.setItem('playerID', newID)
           this.notFillNickName = false
+          this.$q.loading.hide()
+          this.avoidDoubleRequest = true
         })
         .catch(() => {
+          this.$q.loading.hide()
           this.$q.notify({
             message: '請再試一次',
             type: 'warning'
           })
+          this.avoidDoubleRequest = true
         })
-      this.avoidDoubleRequest = true
     }
   }
 
