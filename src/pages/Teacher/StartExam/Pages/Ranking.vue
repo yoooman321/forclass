@@ -51,10 +51,14 @@ export default {
   height: 5vh;
 }
 .btn {
-  margin-top: 2vh;
   text-align: center;
   height: 5vh;
+  position: absolute;
+  bottom: 5vh;
   box-sizing: border-box;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
 
 </style>

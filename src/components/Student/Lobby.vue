@@ -1,6 +1,6 @@
 <template>
   <div class="play-page">
-    <div v-if="notFillNickName">
+    <div v-if="notFillNickName && !tutorialFlag">
       <div class="welcome-img">
         <img :src="welcome" />
       </div>
@@ -21,7 +21,8 @@
         </div>
       </div>
     </div>
-    <div v-if="!notFillNickName">
+    <tutorial v-if="tutorialFlag"></tutorial>
+    <div v-if="!notFillNickName && !tutorialFlag">
       <div class="img-part">
         <img :src="time" />
       </div>
@@ -37,6 +38,7 @@
 import welcome from 'src/assets/images/welcome.png'
 import time from 'src/assets/images/time.png'
 import { db } from 'src/boot/serverConnection'
+import Tutorial from 'src/components/Student/Tutorial'
 export default {
   props: ['nickName'],
   data () {
@@ -46,7 +48,8 @@ export default {
       welcome,
       notFillNickName: true,
       time,
-      avoidDoubleRequest: true
+      avoidDoubleRequest: true,
+      tutorialFlag: false
     }
   },
   created () {
@@ -67,7 +70,7 @@ export default {
       this.avoidDoubleRequest = false
       const newID = Math.floor(Math.random() * 1000000)
       let checkDuplicate = false
-      await db.collection('player').where('playerName', '==', this.nickName).get().then(querySnapshot => {
+      await db.collection('player').where('playerName', '==', this.name).get().then(querySnapshot => {
         querySnapshot.forEach(doc => {
           checkDuplicate = true
         })
@@ -92,6 +95,8 @@ export default {
           this.$emit('setNickName', this.name)
           localStorage.setItem('playerID', newID)
           this.notFillNickName = false
+          this.$store.commit('changestudentHeaderTitle', '使用教學')
+          this.tutorialFlag = true
           this.$q.loading.hide()
           this.avoidDoubleRequest = true
         })
@@ -104,8 +109,10 @@ export default {
           this.avoidDoubleRequest = true
         })
     }
+  },
+  components: {
+    Tutorial
   }
-
 }
 </script>
 <style scoped>

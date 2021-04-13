@@ -57,7 +57,6 @@ export default {
       id: this.$route.params.id,
       whichPage: '',
       nickName: '',
-      headerTitle: '進入遊戲',
       myScore: 0,
       waitForTimeOut: false,
       answerButtonDisabled: true,
@@ -76,6 +75,11 @@ export default {
     Answer,
     Ranking,
     Final
+  },
+  computed: {
+    headerTitle () {
+      return this.$store.state.studentHeaderTitle
+    }
   },
   watch: {
     whichPage () {
@@ -182,5 +186,8 @@ export default {
   width: 100vw;
   height: calc(100vh - 100px);
   background-color: #009FB7;
+}
+.tutorial-style {
+  border: 2px solid #fff;
 }
 </style>
