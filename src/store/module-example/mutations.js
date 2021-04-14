@@ -142,3 +142,6 @@ export function resetVuexExam (state) {
     ]
   }
 }
+export function deleteQuestion (state, [index]) {
+  state.exam.questionList.splice(index, 1)
+}

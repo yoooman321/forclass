@@ -1,5 +1,17 @@
 <template>
   <div class="set">
+    <q-btn class="deleteQuestion-btn" round color="grey-9" icon="close" @click="confirm = true"></q-btn>
+    <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          確定要刪除此問題？
+        </q-card-section>
+        <q-card-section class="row items-center">
+          <q-btn class="dialog-btn" label="確定" color="red" v-close-popup style="margin: 0 5px;" @click="deleteIt"></q-btn>
+          <q-btn class="dialog-btn" label="取消" color="primary" v-close-popup style="margin: 0 5px;"></q-btn>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
     <div class="question-index">
       <div>Question {{ index + 1}}
         <span v-if="!expanded" class="question-title"> - {{ questionTitle }}</span>
@@ -118,7 +130,8 @@ export default {
     return {
       expanded: true,
       options: ['單選', '多選', '是非'],
-      answer: 'single-answer'
+      answer: 'single-answer',
+      confirm: false
     }
   },
   components: {
@@ -146,7 +159,7 @@ export default {
     this.$bus.$off('reset')
   },
   methods: {
-    ...mapMutations(['setQuesiontList', 'changeQuestionTitle']),
+    ...mapMutations(['setQuesiontList', 'changeQuestionTitle', 'deleteQuestion']),
     checkFileType (files) {
       return files.filter(file => file.type === 'image/png' || file.type === 'image/jpeg')
     },
@@ -173,6 +186,9 @@ export default {
         default:
           this.answer = 'single-answer'
       }
+    },
+    deleteIt () {
+      this.deleteQuestion([this.index])
     }
   }
 }
