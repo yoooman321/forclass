@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { auth } from 'src/boot/serverConnection'
 import routes from './routes'
-
+import store from '../store'
 Vue.use(VueRouter)
 
 /*
@@ -32,7 +32,12 @@ export default function (/* { store, ssrContext } */) {
     })) {
       auth.onAuthStateChanged((user) => {
         if (user) {
-          next()
+          if (to.name === 'New') {
+            store.commit('resetVuexExam')
+            next()
+          } else {
+            next()
+          }
         } else {
           next({ path: '/login' })
         }

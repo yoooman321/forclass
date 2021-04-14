@@ -1,7 +1,8 @@
 <template>
   <div>
       <q-list v-for="(menuItem, index) in menuList" :key="index">
-          <q-item clickable @click="goTo(menuItem.path)">
+        <router-link class="link" :to="menuItem.path">
+          <q-item clickable>
             <q-item-section avatar>
               <q-icon :name="menuItem.icon"></q-icon>
             </q-item-section>
@@ -9,11 +10,11 @@
               {{ menuItem.label }}
             </q-item-section>
           </q-item>
+        </router-link>
       </q-list>
   </div>
 </template>
 <script>
-import { mapMutations } from 'vuex'
 export default {
   data () {
     return {
@@ -29,13 +30,6 @@ export default {
           path: '/old'
         }
       ]
-    }
-  },
-  methods: {
-    ...mapMutations(['resetVuexExam']),
-    goTo (path) {
-      this.resetVuexExam()
-      this.$router.push(path)
     }
   }
 }

@@ -5,8 +5,8 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     meta: { requiresAuth: true },
     children: [
-      { path: '', component: () => import('pages/Teacher/NewForm/NewForm.vue') },
-      { path: '/old', component: () => import('pages/Teacher/OldExam/OldForm.vue') },
+      { path: '', name: 'New', component: () => import('pages/Teacher/NewForm/NewForm.vue') },
+      { path: '/old', name: 'Old', component: () => import('pages/Teacher/OldExam/OldForm.vue') },
       {
         path: '/edit/:id',
         name: 'Edit',
