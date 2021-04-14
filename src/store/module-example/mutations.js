@@ -6,8 +6,10 @@ export function addQuestion (state) {
       limitedTime: 20
     },
     answerType: '單選',
-    expanded: true,
-    options: []
+    options: [{ value: '', isAnswer: false, type: '文字', file: null },
+      { value: '', isAnswer: false, type: '文字', file: null },
+      { value: '', isAnswer: false, type: '文字', file: null },
+      { value: '', isAnswer: false, type: '文字', file: null }]
   })
 }
 export function setQuesiontList (state, [value, index, objectName]) {
@@ -65,7 +67,6 @@ export function savecurrentQuestion (state) {
 }
 export function changeTimeOutFlag (state, flag) {
   state.timesOut = flag
-  console.log('ggg')
   window.setTimeout(() => {
     changeStaticFlag(state, flag)
   }, 2000)
@@ -91,4 +92,53 @@ export function cleanPlayerAnswerList (state) {
 }
 export function addStudentQuestionIndex (state) {
   state.studentQuestionIndex++
+}
+export function changestudentHeaderTitle (state, titleName) {
+  state.studentHeaderTitle = titleName
+}
+export function editQuestion (state, exam) {
+  state.exam = exam
+}
+export function changeSelectionType (state, [questionIndex, selectionIndex, value]) {
+  state.exam.questionList[questionIndex].options[selectionIndex].type = value
+}
+export function changeOptioniSingleAnswer (state, [questionIndex, selectionIndex, value]) {
+  state.exam.questionList[questionIndex].options.forEach((ele, i) => {
+    i === selectionIndex ? ele.isAnswer = value : ele.isAnswer = false
+  })
+}
+export function changeOptionFile (state, [questionIndex, selectionIndex, value]) {
+  state.exam.questionList[questionIndex].options[selectionIndex].file = value
+}
+export function changeOptionValue (state, [questionIndex, selectionIndex, value]) {
+  state.exam.questionList[questionIndex].options[selectionIndex].value = value
+}
+export function addOption (state, [questionIndex, newOption]) {
+  state.exam.questionList[questionIndex].options.push(newOption)
+}
+export function deleteOption (state, [questionIndex, selectionIndex]) {
+  state.exam.questionList[questionIndex].options.splice(selectionIndex, 1)
+}
+export function changeOptionMultiAnswer (state, [questionIndex, selectionIndex, value]) {
+  state.exam.questionList[questionIndex].options[selectionIndex].isAnswer = value
+}
+export function resetVuexExam (state) {
+  state.exam = {
+    examName: '',
+    questionList: [
+      {
+        questionTitle: '',
+        questionTitleImage: null,
+        settings: {
+          limitedTime: 20
+        },
+        answerType: '單選',
+        expanded: true,
+        options: [{ value: '', isAnswer: false, type: '文字', file: null },
+          { value: '', isAnswer: false, type: '文字', file: null },
+          { value: '', isAnswer: false, type: '文字', file: null },
+          { value: '', isAnswer: false, type: '文字', file: null }]
+      }
+    ]
+  }
 }

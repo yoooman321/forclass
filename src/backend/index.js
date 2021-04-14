@@ -12,7 +12,7 @@ const getQuestionUrlFromFirebase = async (imgObject, type = 'questions') => {
 const addImageToFirebase = async questions => {
   for (let i = 0; i < questions.length; i++) {
     let question = {}
-    if (questions[i].questionTitleImage) {
+    if (questions[i].questionTitleImage && questions[i].questionTitleImage.type) {
       question = questions[i]
       const url = await getQuestionUrlFromFirebase(question.questionTitleImage)
       question.imageUrl = url
@@ -23,7 +23,7 @@ const addImageToFirebase = async questions => {
 }
 const addAnswerImageToFirebase = async options => {
   for (let i = 0; i < options.length; i++) {
-    if (options[i].file) {
+    if (options[i].file && options[i].file.type) {
       const option = options[i]
       const url = await getQuestionUrlFromFirebase(option.file, 'answers')
       option.imageUrl = url
@@ -31,9 +31,8 @@ const addAnswerImageToFirebase = async options => {
   }
 }
 
-export function addQuesionToFirebase (finalExam) {
-  const newID = Math.floor(Math.random() * 1000000)
-  return db.collection('questions').doc(String(newID)).set(finalExam)
+export function addQuesionToFirebase (finalExam, id) {
+  return db.collection('questions').doc(String(id)).set(finalExam)
     .then(() => {
       return true
     })

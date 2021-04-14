@@ -11,7 +11,10 @@ export default function () {
           },
           answerType: '單選',
           expanded: true,
-          options: []
+          options: [{ value: '', isAnswer: false, type: '文字', file: null },
+            { value: '', isAnswer: false, type: '文字', file: null },
+            { value: '', isAnswer: false, type: '文字', file: null },
+            { value: '', isAnswer: false, type: '文字', file: null }]
         }
       ]
     },
@@ -33,6 +36,7 @@ export default function () {
     questionIndex: 0,
     studentQuestionIndex: 0,
     showStatic: false,
-    playerAnswerList: []
+    playerAnswerList: [],
+    studentHeaderTitle: '進入遊戲'
   }
 }

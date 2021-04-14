@@ -44,3 +44,18 @@ export function changeTimeOutFlag (context, flag) {
     context.commit('changeStaticFlag', flag)
   }, 1000)
 }
+export function changeSelectionType (context, { questionIndex, selectionIndex, value }) {
+  context.commit('changeSelectionType', [questionIndex, selectionIndex, value])
+}
+export function changeOptioniSingleAnswer (context, { questionIndex, selectionIndex, value }) {
+  context.commit('changeOptioniSingleAnswer', [questionIndex, selectionIndex, value])
+}
+export function changeOptionFile (context, { questionIndex, selectionIndex, value }) {
+  context.commit('changeOptionFile', [questionIndex, selectionIndex, value])
+}
+export function changeOptionValue (context, { questionIndex, selectionIndex, value }) {
+  context.commit('changeOptionValue', [questionIndex, selectionIndex, value])
+}
+export function changeOptionMultiAnswer (context, { questionIndex, selectionIndex, value }) {
+  context.commit('changeOptionMultiAnswer', [questionIndex, selectionIndex, value])
+}

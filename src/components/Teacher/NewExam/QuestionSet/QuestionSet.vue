@@ -2,19 +2,19 @@
   <div class="set">
     <div class="question-index">
       <div>Question {{ index + 1}}
-        <span v-if="!question.expanded" class="question-title"> - {{ question.questionTitle }}</span>
+        <span v-if="!expanded" class="question-title"> - {{ questionTitle }}</span>
       </div>
        <q-btn
           color="primary"
           round
           flat
           size="lg"
-          :icon="question.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
-          @click="changeExpnaded(index)"
+          :icon="expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+          @click="changeExpnaded()"
         ></q-btn>
     </div>
     <q-slide-transition>
-      <div v-show="question.expanded">
+      <div v-show="expanded">
         <div class="question-part">
           <div class="title">
             <q-input
@@ -23,11 +23,10 @@
               v-model="questionTitle"
               label="問題："
               :rules="[val => val && val.length > 0 || '請輸入問題']"
-              @input="setQuesiontObject('questionTitle', questionTitle)"
           ></q-input>
           </div>
           <div class="question-image">
-            <q-file v-model="questionTitleImage" label="插入問題圖片（選填）" outlined :filter="checkFileType" @rejected="onRejected" @input="setQuesiontObject('questionTitleImage', questionTitleImage)">
+            <q-file v-model="questionTitleImage" label="插入問題圖片（選填）" outlined :filter="checkFileType" @rejected="onRejected">
               <template v-slot:prepend>
                 <q-icon name="attach_file"></q-icon>
               </template>
@@ -42,7 +41,6 @@
                 v-model="answerType"
                 :options="options" label="答案類型"
                 label-color="primary" outlined
-                @input="setQuesiontObject('answerType',answerType)"
               >
               </q-select>
             </div>
@@ -55,41 +53,81 @@
                   label="答題秒數"
                   suffix="秒"
                   type="number"
-                  @input="setQuesiontObject('limitedTime',limitedTime)"
                   :rules="[val => val && val >= 5 || '秒數至少5秒' ]"
                 ></q-input>
               </div>
           </div>
-        <selection :index="index" :answerType="answerType"></selection>
+        <div class="answer-selection">
+          <div class="selection-title">答案選項: (請勾選正確答案)</div>
+          <component :is="answer" :index="index"></component>
+        </div>
       </div>
     </q-slide-transition>
   </div>
 </template>
 <script>
-import { mapMutations } from 'vuex'
-import Selection from 'src/components/Teacher/NewExam/Selection/Selection'
+import { mapState, mapMutations } from 'vuex'
+import SingleAnswer from 'src/components/Teacher/NewExam/Selection/SingleAnswer/SingleAnswer'
+import MultipleAnswer from 'src/components/Teacher/NewExam/Selection/MultipleAnswer/MultipleAnswer'
+import TrueFalse from 'src/components/Teacher/NewExam/Selection/TrueFalse/TrueFalse'
 export default {
   props: {
     index: {
       type: Number
+    }
+  },
+  computed: {
+    ...mapState([
+      'exam'
+    ]),
+    questionTitle: {
+      get () {
+        return this.exam.questionList[this.index].questionTitle
+      },
+      set (value) {
+        this.setQuesiontList([value, this.index, 'questionTitle'])
+      }
     },
-    question: {
-      type: Object
+    questionTitleImage: {
+      get () {
+        return this.exam.questionList[this.index].questionTitleImage
+      },
+      set (value) {
+        this.setQuesiontList([value, this.index, 'questionTitleImage'])
+      }
+    },
+    answerType: {
+      get () {
+        return this.exam.questionList[this.index].answerType
+      },
+      set (value) {
+        this.setQuesiontList([value, this.index, 'answerType'])
+        this.getAnswerTypeComponent()
+      }
+    },
+    limitedTime: {
+      get () {
+        return this.exam.questionList[this.index].settings.limitedTime
+      },
+      set (value) {
+        this.setQuesiontList([Number(value), this.index, 'limitedTime'])
+      }
     }
   },
   data () {
     return {
-      questionTitle: this.question.questionTitle,
-      questionTitleImage: this.question.questionTitleImage,
-      answerType: this.question.answerType,
+      expanded: true,
       options: ['單選', '多選', '是非'],
-      limitedTime: this.question.settings.limitedTime
+      answer: 'single-answer'
     }
   },
   components: {
-    Selection
+    SingleAnswer,
+    MultipleAnswer,
+    TrueFalse
   },
   created () {
+    this.getAnswerTypeComponent()
     this.$bus.$on('reset', () => {
       this.questionTitle = ''
       this.questionTitleImage = null
@@ -108,9 +146,12 @@ export default {
     this.$bus.$off('reset')
   },
   methods: {
-    ...mapMutations(['changeExpnaded', 'setQuesiontList']),
+    ...mapMutations(['setQuesiontList', 'changeQuestionTitle']),
     checkFileType (files) {
       return files.filter(file => file.type === 'image/png' || file.type === 'image/jpeg')
+    },
+    changeExpnaded () {
+      this.expanded = !this.expanded
     },
     onRejected () {
       this.$q.notify({
@@ -118,8 +159,20 @@ export default {
         message: '請上傳副檔名為 .png 或 .jpg 的檔案'
       })
     },
-    setQuesiontObject (name, value) {
-      this.setQuesiontList([value, this.index, name])
+    getAnswerTypeComponent () {
+      switch (this.answerType) {
+        case '是非':
+          this.answer = 'true-false'
+          break
+        case '多選':
+          this.answer = 'multiple-answer'
+          break
+        case '單選':
+          this.answer = 'single-answer'
+          break
+        default:
+          this.answer = 'single-answer'
+      }
     }
   }
 }

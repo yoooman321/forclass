@@ -23,6 +23,7 @@
 <script>
 import QuestionSet from 'src/components/Teacher/NewExam/QuestionSet/QuestionSet'
 import { mapMutations } from 'vuex'
+import { getFinalQuestionList, addQuesionToFirebase } from 'src/backend/index'
 export default {
   name: 'EditExam',
   computed: {
@@ -35,7 +36,8 @@ export default {
       validateCheck: false,
       avoidDoubleClick: false,
       questions: {},
-      examName: ''
+      examName: '',
+      id: this.$route.params.id
     }
   },
   components: {
@@ -46,25 +48,38 @@ export default {
       return item.examID === this.$route.params.id
     })
     this.examName = this.questions.examName
+    this.editQuestion(this.questions)
   },
   methods: {
-    ...mapMutations(['addQuestion', 'changeExamName', 'resetQuestion']),
-    saveForm () {
+    ...mapMutations(['addQuestion', 'changeExamName', 'resetQuestion', 'editQuestion', 'resetVuexExam']),
+    async saveForm () {
       if (this.avoidDoubleClick) return
-      this.validateCheck = false
-      this.$bus.$emit('validateCheck')
-      this.$refs.examName.validate()
-      if (this.validateCheck || this.$refs.examName.hasError) {
-        this.$q.notify({
-          type: 'negative',
-          message: '有欄位有錯誤，請檢查!!',
-          icon: 'warning',
-          position: 'top-right'
-        })
-        return
-      }
-      // add firebase api
+      // this.validateCheck = false
+      // this.$bus.$emit('validateCheck')
+      // this.$refs.examName.validate()
+      // if (this.validateCheck || this.$refs.examName.hasError) {
+      //   this.$q.notify({
+      //     type: 'negative',
+      //     message: '有欄位有錯誤，請檢查!!',
+      //     icon: 'warning',
+      //     position: 'top-right'
+      //   })
+      //   return
+      // }
+      this.$q.loading.show({ message: '新增中，請稍等...' })
+      const finalQuestionList = await getFinalQuestionList()
+      const finalExam = this.clearUselessData(JSON.parse(JSON.stringify(this.questions)), finalQuestionList)
+      await addQuesionToFirebase(finalExam, this.id)
+      console.log('final: ', finalExam)
+      this.$q.loading.hide()
+      this.$q.notify({
+        type: 'positive',
+        message: '新增成功！',
+        position: 'top-right'
+      })
       this.avoidDoubleClick = false
+      this.resetVuexExam()
+      this.$router.push('/old')
     },
     resetForm () {
       this.$bus.$emit('reset')
@@ -72,6 +87,24 @@ export default {
     },
     getValidate (check) {
       if (check) this.validateCheck = true
+    },
+    clearUselessData (question, finalQuestionList) {
+      question.questionList.forEach((ele, index) => {
+        if (finalQuestionList[index].questionTitleImage && finalQuestionList[index].questionTitleImage.type) {
+          const titleImageName = finalQuestionList[index].questionTitleImage?.name
+          ele.questionTitleImage = [{ name: titleImageName }]
+        }
+
+        ele.options.forEach((item, itemIndex) => {
+          if (finalQuestionList[index].options[itemIndex].file && finalQuestionList[index].options[itemIndex].file.type) {
+            const optionImageName = finalQuestionList[index].options[itemIndex]?.file?.name
+            item.file = [{ name: optionImageName }]
+          } else if (finalQuestionList[index].options[itemIndex].type === '文字') {
+            item.file = null
+          }
+        })
+      })
+      return question
     }
   }
 }

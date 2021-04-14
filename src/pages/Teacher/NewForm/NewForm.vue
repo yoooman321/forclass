@@ -10,7 +10,7 @@
         ></q-input>
       </div>
       <div v-for="(question, index) in questions.questionList" :key="'aa'+index">
-        <question-set @getValidate="getValidate" :index="index" :question="question"></question-set>
+        <question-set @getValidate="getValidate" :index="index" ></question-set>
       </div>
         <q-btn icon="add_box" outline color="primary" class="full-width button" label="新增問題" size='lg' @click="addQuestion()"></q-btn>
       <div class="button">
@@ -49,7 +49,7 @@ export default {
     QuestionSet
   },
   methods: {
-    ...mapMutations(['addQuestion', 'changeExamName', 'resetQuestion']),
+    ...mapMutations(['addQuestion', 'changeExamName', 'resetQuestion', 'resetVuexExam']),
     async saveForm () {
       if (this.avoidDoubleClick) return
       this.validateCheck = false
@@ -67,10 +67,9 @@ export default {
       // 驗證過後:
       this.$q.loading.show({ message: '新增中，請稍等...' })
       const finalQuestionList = await getFinalQuestionList()
-      const finalExam = { ...this.questions }
-      finalExam.questionList = this.clearUselessData(finalQuestionList)
-      // need add notify
-      await addQuesionToFirebase(finalExam)
+      const finalExam = this.clearUselessData(JSON.parse(JSON.stringify(this.questions)), finalQuestionList)
+      const newID = Math.floor(Math.random() * 1000000)
+      await addQuesionToFirebase(finalExam, newID)
       this.$q.loading.hide()
       this.$q.notify({
         type: 'positive',
@@ -78,6 +77,7 @@ export default {
         position: 'top-right'
       })
       this.avoidDoubleClick = false
+      this.resetVuexExam()
       this.$router.push('/old')
     },
     resetForm () {
@@ -87,14 +87,16 @@ export default {
     getValidate (check) {
       if (check) this.validateCheck = true
     },
-    clearUselessData (data) {
-      data.forEach(ele => {
-        delete ele.questionTitleImage
-        ele.options.forEach(item => {
-          delete item.file
+    clearUselessData (question, finalQuestionList) {
+      question.questionList.forEach((ele, index) => {
+        const titleImageName = finalQuestionList[index].questionTitleImage?.name
+        titleImageName ? ele.questionTitleImage = [{ name: titleImageName }] : ele.questionTitleImage = null
+        ele.options.forEach((item, itemIndex) => {
+          const optionImageName = finalQuestionList[index].options[itemIndex]?.file?.name
+          optionImageName ? item.file = [{ name: optionImageName }] : item.file = null
         })
       })
-      return data
+      return question
     }
   }
 }

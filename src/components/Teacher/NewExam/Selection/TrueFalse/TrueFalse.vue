@@ -20,7 +20,7 @@
 import { mapMutations } from 'vuex'
 export default {
   props: {
-    questionIndex: {
+    index: {
       type: Number,
       required: true
     }
@@ -43,8 +43,11 @@ export default {
       this.options.forEach((o, i) => {
         o.isAnswer = i === index
       })
-      this.changeOptions([JSON.parse(JSON.stringify(this.options)), this.questionIndex])
+      this.changeOptions([JSON.parse(JSON.stringify(this.options)), this.index])
     }
+  },
+  created () {
+    if (this.$route.params.id) this.options = JSON.parse(JSON.stringify(this.$store.state.exam.questionList[this.index].options))
   }
 }
 </script>
