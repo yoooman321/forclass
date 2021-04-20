@@ -52,6 +52,7 @@ export function deleteExam (state, index) {
 export function resetQuestion (state) {
   state.exam.examName = ''
   state.exam.questionList = []
+  state.exam.rankDisabledFlag = false
   addQuestion(state)
 }
 export function getExamList (state, data) {
@@ -125,6 +126,7 @@ export function changeOptionMultiAnswer (state, [questionIndex, selectionIndex, 
 export function resetVuexExam (state) {
   state.exam = {
     examName: '',
+    rankDisabledFlag: false,
     questionList: [
       {
         questionTitle: '',
@@ -144,4 +146,7 @@ export function resetVuexExam (state) {
 }
 export function deleteQuestion (state, [index]) {
   state.exam.questionList.splice(index, 1)
+}
+export function changeRankDisabled (state, value) {
+  state.exam.rankDisabledFlag = value
 }

@@ -8,6 +8,7 @@
           label="考題名稱："
           :rules="[val => val && val.length > 0 || '請輸入考題名稱']"
         ></q-input>
+        <q-checkbox v-model="rankDisabledFlag" label="不顯示排行榜" ></q-checkbox>
       </div>
       <div v-for="(question, index) in questions.questionList" :key="'aa'+index">
         <question-set @getValidate="getValidate" :index="index" ></question-set>
@@ -37,6 +38,14 @@ export default {
       set (value) {
         this.changeExamName(value)
       }
+    },
+    rankDisabledFlag: {
+      get () {
+        return this.questions.rankDisabledFlag
+      },
+      set (value) {
+        this.changeRankDisabled(value)
+      }
     }
   },
   data () {
@@ -49,7 +58,7 @@ export default {
     QuestionSet
   },
   methods: {
-    ...mapMutations(['addQuestion', 'changeExamName', 'resetQuestion', 'resetVuexExam']),
+    ...mapMutations(['addQuestion', 'changeExamName', 'resetQuestion', 'resetVuexExam', 'changeRankDisabled']),
     async saveForm () {
       if (this.avoidDoubleClick) return
       this.validateCheck = false

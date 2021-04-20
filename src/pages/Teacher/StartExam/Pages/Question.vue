@@ -3,22 +3,25 @@
     <div class="top">
       <question-part :title="currentQuestion.questionTitle"></question-part>
     </div>
-    <div class="middle">
-      <player-answer-list class="middle__playerList"></player-answer-list>
+    <div class="middle" :class="{'short-answer-type': isShortAnswer}">
+      <player-answer-list class="middle__playerList" v-if="!isShortAnswer"></player-answer-list>
       <img class="middle__img" :src="currentQuestion.imageUrl" v-if="currentQuestion.imageUrl">
       <div class="middle-left">
         <timer class="timer" :time="currentQuestion.settings.limitedTime"></timer>
         <div class="button">
-          <q-btn v-if="staticFlag" color="secondary" label="目前戰況" size="xl" @click="next"></q-btn>
+          <q-btn v-if="staticFlag" color="secondary" :label="!isShortAnswer ? '目前戰況' : '下一題'" size="xl" @click="next" :class="{'short-answer-btn': !isShortAnswer}"></q-btn>
         </div>
       </div>
     </div>
     <div class="bottom">
-      <answers-part :options="currentQuestion.options"></answers-part>
+      <answers-part :options="currentQuestion.options" v-if="!isShortAnswer"></answers-part>
     </div>
-      <transition name="slide">
-        <statistics class="statistics" v-if="staticFlag" :playerInfo="playerInfo" :optionAmount="currentQuestion.options.length"></statistics>
-      </transition>
+    <div class="word-cloud">
+      <word-cloud v-if="isShortAnswer"></word-cloud>
+    </div>
+    <transition name="slide">
+      <statistics class="statistics" v-if="staticFlag && !isShortAnswer" :playerInfo="playerInfo" :optionAmount="currentQuestion.options.length"></statistics>
+    </transition>
   </div>
 </template>
 <script>
@@ -27,6 +30,7 @@ import QuestionPart from 'src/components/Games/QuestionPart/QuestionPart'
 import AnswersPart from 'src/components/Games/AnswersPart/AnswersPart'
 import Statistics from 'src/components/Games/Statistics/Statistics'
 import PlayerAnswerList from 'src/components/Games/Rank/PlayerAnswerList'
+import WordCloud from 'src/components/Games/AnswersPart/WordCloud'
 import music from 'src/assets/music/crrect_answer3.mp3'
 export default {
   props: {
@@ -46,7 +50,8 @@ export default {
       lobby: false,
       transitions: true,
       currentQuestion: this.$store.state.currentQuestion,
-      music
+      music,
+      isShortAnswer: undefined
     }
   },
   computed: {
@@ -59,7 +64,8 @@ export default {
   },
   watch: {
     timeOut () {
-      if (this.timeOut) this.$store.dispatch('changePage', { examID: this.id, studentPage: 'ranking', teacherPage: 'question' })
+      if (this.timeOut && !this.isShortAnswer) this.$store.dispatch('changePage', { examID: this.id, studentPage: 'ranking', teacherPage: 'question' })
+      else this.$store.dispatch('changePage', { examID: this.id, studentPage: 'times-up', teacherPage: 'question' })
     },
     staticFlag () {
       if (this.staticFlag) {
@@ -73,10 +79,9 @@ export default {
     Timer,
     AnswersPart,
     Statistics,
-    PlayerAnswerList
+    PlayerAnswerList,
+    WordCloud
     // Rank
-    // Lobby,
-    // AnimationTransition
   },
   methods: {
     randomBGColor () {
@@ -94,13 +99,20 @@ export default {
     next () {
       this.$store.dispatch('changeTimeOutFlag', false)
       this.$store.commit('cleanPlayerAnswerList')
-      if (this.questionIndex < this.$store.state.currentExam.questionList.length) {
+      const isNotFinal = this.questionIndex < this.$store.state.currentExam.questionList.length
+      if (this.isShortAnswer && isNotFinal) {
+        this.$bus.$emit('saveCurrentQuestionToVuex')
+        this.$store.dispatch('changePage', { examID: this.id, studentPage: 'animation-transition', teacherPage: 'animation-transition' })
+      } else if (isNotFinal) {
         this.$store.dispatch('changePage', { examID: this.id, studentPage: 'ranking', teacherPage: 'ranking' })
       } else {
         this.$bus.$emit('saveCurrentQuestionToVuex')
       }
       // this.$bus.$emit('playBackgroundMusic')
     }
+  },
+  created () {
+    this.isShortAnswer = this.currentQuestion.answerType === '問答'
   }
 }
 </script>
@@ -118,6 +130,12 @@ export default {
   padding: 0 0 1vh;
   margin: 0 1vw;
   align-items: center;
+}
+.short-answer-type {
+  justify-content: flex-end;
+}
+.middle-left {
+  max-width: 20vw;
 }
 .middle__playerList {
   width: 30%;
@@ -140,6 +158,10 @@ export default {
 .slide-enter-active {
   transition: opacity 1s;
   animation: slide-in 1.5s ease-out forwards;
+}
+.word-cloud {
+  position: absolute;
+  top: 26vh;
 }
 @keyframes slide-in {
   from {

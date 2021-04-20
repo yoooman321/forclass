@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="answerSelection">
+  <div class="answer-component">
+    <div class="answerSelection" v-if="!isShortAnswer">
       <div
         v-for="(option, index) in currentQuestion.options"
         :key="index"
@@ -14,10 +14,13 @@
         </q-icon>
       </div>
     </div>
+    <div class="short-answer-selection" v-else>
+      <q-input bg-color="white" filled v-model="myShortAnswer" @input="setShortAnswer" label="我的答案"></q-input>
+    </div>
   </div>
 </template>
 <script>
-import { sendAnswer } from 'src/backend/index'
+import { sendAnswer, sendShortAnswer } from 'src/backend/index'
 export default {
   props: {
     waitForTimeOut: {
@@ -38,7 +41,9 @@ export default {
       corret: true,
       score: 0,
       playerID: localStorage.getItem('playerID'),
-      studentQuestionIndex: this.$store.state.studentQuestionIndex
+      studentQuestionIndex: this.$store.state.studentQuestionIndex,
+      isShortAnswer: this.currentQuestion.answerType === '問答',
+      myShortAnswer: ''
     }
   },
   methods: {
@@ -76,6 +81,11 @@ export default {
       this.$emit('setAnswerButtonDisabled')
     },
     getResult () {
+      if (this.isShortAnswer) {
+        sendShortAnswer(this.playerID, this.myShortAnswer, this.studentQuestionIndex)
+        this.$store.commit('addStudentQuestionIndex')
+        return
+      }
       this.myAnswer.forEach(ele => {
         if (!this.currentQuestion.options[ele].isAnswer) this.corret = false
       })
@@ -90,6 +100,11 @@ export default {
       sendAnswer(this.playerID, this.myAnswer, finalScore, answerTime, this.studentQuestionIndex)
       this.$store.commit('addStudentQuestionIndex')
       this.$emit('getResult', this.score, this.corret)
+    },
+    setShortAnswer (e) {
+      if (this.myShortAnswer !== '') {
+        this.$emit('setAnswerButtonDisabled')
+      }
     }
   },
   watch: {
@@ -103,6 +118,9 @@ export default {
 }
 </script>
 <style scoped>
+.answer-component {
+  position: relative;
+}
 .answerSelection {
   display: flex;
   flex-wrap: wrap;
@@ -134,6 +152,10 @@ export default {
   /* height: 50%; */
   padding-top: 15vh;
   width: 100%;
+}
+.short-answer-selection {
+  margin: 0 5vw;
+  padding-top: 20vh;
 }
 </style>
 <style>

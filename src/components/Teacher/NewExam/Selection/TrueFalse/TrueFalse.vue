@@ -47,7 +47,7 @@ export default {
     }
   },
   created () {
-    if (this.$route.params.id) this.options = JSON.parse(JSON.stringify(this.$store.state.exam.questionList[this.index].options))
+    if (this.$route.params.id && this.$store.state.exam.questionList[this.index].options.length === 2) this.options = JSON.parse(JSON.stringify(this.$store.state.exam.questionList[this.index].options))
   }
 }
 </script>

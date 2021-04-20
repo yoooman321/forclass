@@ -4,9 +4,14 @@
       <div class="text">
         掃描QR Code進入遊戲
       </div>
-      <vue-qrcode  :value="location"  />
+      <div @click="qrcode = true" class="qrcode-image">
+        <vue-qrcode  :value="location" />
+      </div>
       <div class="text"> or  輸入網址：{{ location }} </div>
     </div>
+    <q-dialog v-model="qrcode" full-height full-width>
+      <vue-qrcode  :value="location" :width="height" />
+    </q-dialog>
   </div>
 </template>
 <script>
@@ -20,8 +25,9 @@ export default {
   },
   data () {
     return {
-      location: ''
-      // currentExamID: this.$store.state.currentExam
+      location: '',
+      qrcode: false,
+      height: 0
     }
   },
   components: {
@@ -29,6 +35,8 @@ export default {
   },
   created () {
     this.location = 'http://' + window.location.hostname + '/#/play/' + this.id
+    const min = Math.min(document.documentElement.clientHeight, document.documentElement.clientWidth)
+    this.height = min - 50
   }
 }
 </script>
@@ -45,6 +53,8 @@ export default {
     padding 0 2vw
     color $grey-7
     font-weight bold
+  .qrcode-image
+    cursor pointer
   .btn
     position absolute
     right 2vh

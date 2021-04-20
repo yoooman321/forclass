@@ -82,6 +82,7 @@ import { mapState, mapMutations } from 'vuex'
 import SingleAnswer from 'src/components/Teacher/NewExam/Selection/SingleAnswer/SingleAnswer'
 import MultipleAnswer from 'src/components/Teacher/NewExam/Selection/MultipleAnswer/MultipleAnswer'
 import TrueFalse from 'src/components/Teacher/NewExam/Selection/TrueFalse/TrueFalse'
+import ShortAnswer from 'src/components/Teacher/NewExam/Selection/ShortAnswer/ShortAnswer'
 export default {
   props: {
     index: {
@@ -129,7 +130,7 @@ export default {
   data () {
     return {
       expanded: true,
-      options: ['單選', '多選', '是非'],
+      options: ['單選', '多選', '是非', '問答'],
       answer: 'single-answer',
       confirm: false
     }
@@ -137,7 +138,8 @@ export default {
   components: {
     SingleAnswer,
     MultipleAnswer,
-    TrueFalse
+    TrueFalse,
+    ShortAnswer
   },
   created () {
     this.getAnswerTypeComponent()
@@ -182,6 +184,9 @@ export default {
           break
         case '單選':
           this.answer = 'single-answer'
+          break
+        case '問答':
+          this.answer = 'short-answer'
           break
         default:
           this.answer = 'single-answer'

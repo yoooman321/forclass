@@ -125,6 +125,11 @@ export function deleteExam (examID) {
     .then(() => true)
     .catch(() => false)
 }
+export function deleteWhichPage (examID) {
+  return db.collection('whichPage').doc(String(examID)).delete()
+    .then(() => true)
+    .catch(() => false)
+}
 export function sendAnswer (playerID, answer, score, answerTime, questionIndex) {
   db.collection('player').doc(String(playerID)).update({
     answer,
@@ -133,6 +138,13 @@ export function sendAnswer (playerID, answer, score, answerTime, questionIndex) 
     questionIndex
   })
     .then(() => console.log('sucessful'))
+}
+export function sendShortAnswer (playerID, answer, questionIndex) {
+  db.collection('player').doc(String(playerID)).update({
+    answer,
+    questionIndex
+  })
+    .then(() => console.log('short answer successful'))
 }
 export async function getPlayerInfo () {
   const playerInfo = []

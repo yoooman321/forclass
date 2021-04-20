@@ -12,7 +12,7 @@ import Ranking from './Pages/Ranking'
 import { getCurrentExamData, setCurrentQuestion, getPlayerInfo, alignRankList } from 'src/backend/index'
 import { db } from 'src/boot/serverConnection'
 import { mapMutations } from 'vuex'
-import { deleteCurrentExam, deleteQuestion, deleteRankList } from 'src/backend/index.js'
+import { deleteCurrentExam, deleteQuestion, deleteRankList, deleteWhichPage } from 'src/backend/index.js'
 export default {
   components: {
     Lobby,
@@ -76,6 +76,10 @@ export default {
         this.questionIndex++
         return
       }
+      if (this.examData.rankDisabledFlag) {
+        this.$store.dispatch('changePage', { examID: this.id, studentPage: 'final-no-rank', teacherPage: 'game-finish' })
+        return
+      }
       this.$store.dispatch('changePage', { examID: this.id, studentPage: 'final', teacherPage: 'game-finish' })
     },
     async getPlayerInfo () {
@@ -101,6 +105,7 @@ export default {
       deleteCurrentExam(this.id)
       deleteQuestion(this.id)
       deleteRankList(this.id)
+      deleteWhichPage(this.id)
     },
     unsubscribe () {
       // const playerRef = db.collection('player')

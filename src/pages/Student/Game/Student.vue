@@ -48,6 +48,8 @@ import Lobby from 'src/components/Student/Lobby'
 import AnimationTransition from 'src/components/Student/AnimationTransition'
 import Answer from 'src/components/Student/Answer'
 import Ranking from 'src/components/Student/Ranking'
+import TimesUp from 'src/components/Student/TimesUp'
+import FinalNoRank from 'src/components/Student/FinalNoRank'
 import Final from 'src/components/Student/Final'
 import { db } from 'src/boot/serverConnection'
 import { getRankList } from 'src/backend/index'
@@ -74,7 +76,9 @@ export default {
     AnimationTransition,
     Answer,
     Ranking,
-    Final
+    Final,
+    TimesUp,
+    FinalNoRank
   },
   computed: {
     headerTitle () {

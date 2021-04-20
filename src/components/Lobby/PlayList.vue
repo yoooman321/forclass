@@ -1,7 +1,7 @@
 <template>
   <div class="play">
     <div class="playerList">
-      玩家名單(過30秒若沒有你的名字請重新進入)
+      玩家名單
       <div class="total-player">目前人數：{{ playerlist.length }}人</div>
     </div>
     <div class="player" v-for="(player, index) in playerlist" :key="index">
