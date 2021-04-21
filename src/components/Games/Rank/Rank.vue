@@ -28,6 +28,11 @@ export default {
       GoldCrown,
       SliverCrown,
       BronzeCrown
+      // test: {
+      //   1: ['2', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1'],
+      //   2: ['3', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1'],
+      //   3: ['3', 'test1', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3']
+      // }
     }
   }
 }
@@ -43,7 +48,7 @@ export default {
   max-width: 25px;
 }
 .rank{
-  min-height: 50vh;
+  height: 60vh;
   padding: 0 20px
 }
 .rank-list {
