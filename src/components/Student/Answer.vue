@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="short-answer-selection" v-else>
-      <q-input bg-color="white" filled v-model="myShortAnswer" @input="setShortAnswer" label="我的答案"></q-input>
+      <q-input bg-color="white" filled v-model="myShortAnswer" @input="setShortAnswer" label="我的答案(送出後可再填寫)"></q-input>
     </div>
   </div>
 </template>
@@ -43,7 +43,8 @@ export default {
       playerID: localStorage.getItem('playerID'),
       studentQuestionIndex: this.$store.state.studentQuestionIndex,
       isShortAnswer: this.currentQuestion.answerType === '問答',
-      myShortAnswer: ''
+      myShortAnswer: '',
+      oldAnswerList: []
     }
   },
   methods: {
@@ -82,8 +83,9 @@ export default {
     },
     getResult () {
       if (this.isShortAnswer) {
-        sendShortAnswer(this.playerID, this.myShortAnswer, this.studentQuestionIndex)
-        this.$store.commit('addStudentQuestionIndex')
+        this.oldAnswerList = [...this.oldAnswerList, this.myShortAnswer]
+        sendShortAnswer(this.playerID, this.oldAnswerList, this.studentQuestionIndex)
+        this.myShortAnswer = ''
         return
       }
       this.myAnswer.forEach(ele => {
@@ -98,7 +100,6 @@ export default {
       const finalScore = this.myScore + this.score
       const answerTime = new Date().getTime()
       sendAnswer(this.playerID, this.myAnswer, finalScore, answerTime, this.studentQuestionIndex)
-      this.$store.commit('addStudentQuestionIndex')
       this.$emit('getResult', this.score, this.corret)
     },
     setShortAnswer (e) {
@@ -109,9 +110,11 @@ export default {
   },
   watch: {
     waitForTimeOut () {
-      this.$q.loading.show({
-        message: '等待解答...'
-      })
+      if (!this.isShortAnswer) {
+        this.$q.loading.show({
+          message: '等待解答...'
+        })
+      }
       this.getResult()
     }
   }

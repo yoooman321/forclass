@@ -3,7 +3,7 @@
     <vue-word-cloud
       :words="words"
       :color="() => { return colorList[Math.floor(Math.random()*15)] }"
-      :spacing="0.5"
+      :spacing="0"
       font-family="Roboto"
     />
   </div>
@@ -43,7 +43,8 @@ export default {
       player.where('questionIndex', '==', index).onSnapshot((querySnapshot) => {
         this.playersAnswer = []
         querySnapshot.forEach(doc => {
-          this.playersAnswer.push(doc.data().answer)
+          const eachAnswerList = doc.data().answer.map(ele => ele)
+          this.playersAnswer = this.playersAnswer.concat(eachAnswerList)
         })
       })
     },

@@ -79,19 +79,20 @@ export default {
     this.$store.dispatch('getExamList')
   },
   methods: {
-    // ...mapMutations(['saveCurrentExam']),
-    playIt (data) {
-      // 1. store id into local storage (in case pressing refresh accidentally)
-      // 2. put data in vuex (current exam)
-      // this.saveCurrentExam(data)
-      addCurrentExamData(data.examID, data)
-      // deletePlayer()
-      const routeData = this.$router.resolve({ name: 'Start', params: { id: data.examID, examData: data } })
-      this.$store.dispatch('changePage', { examID: data.examID, studentPage: 'lobby', teacherPage: 'lobby' })
-      window.open(routeData.href, '_blank')
+    async playIt (data) {
+      const done = await addCurrentExamData(data.examID, data)
+      if (done) {
+        const routeData = this.$router.resolve({ name: 'Start', params: { id: data.examID, examData: data } })
+        this.$store.dispatch('changePage', { examID: data.examID, studentPage: 'lobby', teacherPage: 'lobby' })
+        window.open(routeData.href, '_blank')
+      } else {
+        this.$q.notify({
+          message: '請再試一次',
+          type: 'warning'
+        })
+      }
     },
     deleteItem (data) {
-      // const index = this.data.indexOf(item);
       confirm('確定刪除?') &&
         this.$store.dispatch('deleteItem', data.examID)
     },

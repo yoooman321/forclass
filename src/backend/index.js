@@ -47,12 +47,12 @@ export const getFinalQuestionList = async () => {
   return questions
 }
 export function addCurrentExamData (examID, examData) {
-  db.collection('currentExam').doc(examID).set(examData)
+  return db.collection('currentExam').doc(examID).set(examData)
     .then(() => {
-      console.log('done')
+      return true
     })
-    .catch(err => {
-      console.log('err: ', err)
+    .catch(() => {
+      return false
     })
 }
 export function setWhichPage (examID, pageName) {
@@ -60,9 +60,12 @@ export function setWhichPage (examID, pageName) {
     .then(() => console.log('done'))
 }
 export function getCurrentExamData (examID) {
-  return db.collection('currentExam').doc(examID).get()
+  return db.collection('currentExam').doc(String(examID)).get()
     .then(ele => {
       return ele.data()
+    })
+    .catch(err => {
+      console.log('err: ', err)
     })
 }
 export function setCurrentQuestion (examID, question) {

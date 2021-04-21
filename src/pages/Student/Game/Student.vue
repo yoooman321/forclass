@@ -90,6 +90,7 @@ export default {
       this.waitForTimeOut = false
       this.answerButtonDisabled = true
       this.$q.loading.hide()
+      if (this.whichPage === 'ranking' || this.whichPage === 'times-up') this.$store.commit('addStudentQuestionIndex')
       if (this.whichPage === 'final') {
         this.getRank()
       }
@@ -153,7 +154,8 @@ export default {
       this.nickName = name
     },
     sentAnswer () {
-      this.waitForTimeOut = true
+      if (this.currentQuestion.answerType === '問答') this.waitForTimeOut = !this.waitForTimeOut
+      else this.waitForTimeOut = true
     },
     setAnswerButtonDisabled () {
       this.answerButtonDisabled = false

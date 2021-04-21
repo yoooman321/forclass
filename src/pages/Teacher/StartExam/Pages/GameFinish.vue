@@ -11,7 +11,7 @@
 </template>
 <script>
 import Rank from 'src/components/Games/Rank/Rank'
-import { deleteCurrentExam, deleteQuestion, deleteRankList, deleteWhichPage } from 'src/backend/index'
+import { deleteCurrentExam, deleteQuestion } from 'src/backend/index'
 import Thank from 'src/assets/images/thank_you.png'
 export default {
   props: {
@@ -29,8 +29,8 @@ export default {
   created () {
     deleteCurrentExam(this.id)
     deleteQuestion(this.id)
-    deleteRankList(this.id)
-    deleteWhichPage(this.id)
+    // deleteRankList(this.id)
+    // deleteWhichPage(this.id)
   },
   components: {
     Rank
