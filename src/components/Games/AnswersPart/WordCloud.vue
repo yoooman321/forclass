@@ -3,7 +3,7 @@
     <vue-word-cloud
       :words="words"
       :color="() => { return colorList[Math.floor(Math.random()*15)] }"
-      :spacing="0"
+      :spacing="1"
       font-family="Roboto"
     />
   </div>

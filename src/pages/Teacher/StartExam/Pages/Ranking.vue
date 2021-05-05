@@ -1,7 +1,7 @@
 <template>
   <div class="ranking">
     <h3 class="title">目前戰況</h3>
-      <rank :rank="rankList"></rank>
+    <rank :rank="rankList"></rank>
     <div class="btn">
        <q-btn color="primary" label="下一題" size="xl" @click="next"></q-btn>
     </div>
@@ -42,20 +42,21 @@ export default {
   background-size: 100vw 100vh;
   background-repeat: repeat;
   position: relative;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 .title {
   text-align: center;
   font-weight: bold;
   font-size: 2.5em;
-  height: 5vh;
+  margin: 0;
+  padding-top: 20px;
 }
 .btn {
   text-align: center;
-  height: 5vh;
-  position: absolute;
-  bottom: 5vh;
   box-sizing: border-box;
+  position: fixed;
+  bottom: 20px;
   left: 0;
   right: 0;
   margin: auto;

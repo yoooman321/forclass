@@ -48,14 +48,15 @@ export default {
   max-width: 25px;
 }
 .rank{
-  height: 60vh;
+  max-height: 65vh;
   padding: 0 20px
 }
 .rank-list {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  height: 65vh;
+  max-height: 60vh;
+  margin-bottom: 70px;
 }
 .member {
   display: inline-block;
