@@ -3,7 +3,7 @@
     <h3 class="title">目前戰況</h3>
     <rank :rank="rankList"></rank>
     <div class="btn">
-       <q-btn color="primary" label="下一題" size="xl" @click="next"></q-btn>
+      <q-btn color="primary" label="下一題" size="xl" @click="next"></q-btn>
     </div>
   </div>
 </template>
@@ -18,15 +18,19 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       id: this.$route.params.id
     }
   },
   methods: {
-    next () {
+    next() {
       this.$bus.$emit('saveCurrentQuestionToVuex')
-      this.$store.dispatch('changePage', { examID: this.id, studentPage: 'animation-transition', teacherPage: 'animation-transition' })
+      this.$store.dispatch('changePage', {
+        examID: this.id,
+        studentPage: 'animation-transition',
+        teacherPage: 'animation-transition'
+      })
     }
   },
   components: {
@@ -61,5 +65,4 @@ export default {
   right: 0;
   margin: auto;
 }
-
 </style>
