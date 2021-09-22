@@ -34,7 +34,7 @@ const addAnswerImageToFirebase = async options => {
   }
 }
 
-export function addQuesionToFirebase(finalExam, id) {
+export function addQuesionToFirebase (finalExam, id) {
   return db
     .collection('questions')
     .doc(String(id))
@@ -52,7 +52,7 @@ export const getFinalQuestionList = async () => {
   await addImageToFirebase(questions)
   return questions
 }
-export function addCurrentExamData(examID, examData) {
+export function addCurrentExamData (examID, examData) {
   return db
     .collection('currentExam')
     .doc(examID)
@@ -64,7 +64,7 @@ export function addCurrentExamData(examID, examData) {
       return false
     })
 }
-export function setWhichPage(examID, pageName) {
+export function setWhichPage (examID, pageName) {
   return db
     .collection('whichPage')
     .doc(examID)
@@ -76,7 +76,7 @@ export function setWhichPage(examID, pageName) {
       return false
     })
 }
-export function getCurrentExamData(examID) {
+export function getCurrentExamData (examID) {
   return db
     .collection('currentExam')
     .doc(String(examID))
@@ -88,7 +88,7 @@ export function getCurrentExamData(examID) {
       console.log('err: ', err)
     })
 }
-export function setCurrentQuestion(examID, question) {
+export function setCurrentQuestion (examID, question) {
   db.collection('currentQuestion')
     .doc(String(examID))
     .set(question)
@@ -96,7 +96,7 @@ export function setCurrentQuestion(examID, question) {
       console.error('err: ', err)
     })
 }
-export function updateCurrentQuestion(examID, question) {
+export function updateCurrentQuestion (examID, question) {
   db.collection('currentQuestion')
     .doc(String(examID))
     .update(question)
@@ -107,7 +107,7 @@ export function updateCurrentQuestion(examID, question) {
       console.log('err: ', err)
     })
 }
-export function getImageName(titleImage, answerImage) {
+export function getImageName (titleImage, answerImage) {
   let titleImageUrl = ''
   const answerImageUrl = []
   if (titleImage) {
@@ -120,7 +120,7 @@ export function getImageName(titleImage, answerImage) {
   }
   return { titleImageUrl, answerImageUrl }
 }
-export function getImageUrl(path, fileName) {
+export function getImageUrl (path, fileName) {
   const storageRef = storage.ref(path + '/' + fileName)
   return storageRef
     .getDownloadURL()
@@ -131,7 +131,7 @@ export function getImageUrl(path, fileName) {
       console.log('err', err)
     })
 }
-export function deleteCurrentExam(examID) {
+export function deleteCurrentExam (examID) {
   db.collection('currentExam')
     .doc(String(examID))
     .delete()
@@ -139,13 +139,13 @@ export function deleteCurrentExam(examID) {
       console.log('delete successfully!')
     })
 }
-export function deletePlayer() {
+export function deletePlayer () {
   db.collection('player')
     .delete()
     .then(() => console.log('dleeee'))
     .catch(err => console.log('err: ', err))
 }
-export function deleteQuestion(examID) {
+export function deleteQuestion (examID) {
   db.collection('currentQuestion')
     .doc(String(examID))
     .delete()
@@ -153,7 +153,7 @@ export function deleteQuestion(examID) {
       console.log('delete successfully!')
     })
 }
-export function deleteExam(examID) {
+export function deleteExam (examID) {
   return db
     .collection('questions')
     .doc(String(examID))
@@ -161,7 +161,7 @@ export function deleteExam(examID) {
     .then(() => true)
     .catch(() => false)
 }
-export function deleteWhichPage(examID) {
+export function deleteWhichPage (examID) {
   return db
     .collection('whichPage')
     .doc(String(examID))
@@ -169,7 +169,7 @@ export function deleteWhichPage(examID) {
     .then(() => true)
     .catch(() => false)
 }
-export function sendAnswer(playerID, answer, score, answerTime, questionIndex) {
+export function sendAnswer (playerID, answer, score, answerTime, questionIndex) {
   db.collection('player')
     .doc(String(playerID))
     .update({
@@ -180,7 +180,7 @@ export function sendAnswer(playerID, answer, score, answerTime, questionIndex) {
     })
     .then(() => console.log('sucessful'))
 }
-export function sendShortAnswer(playerID, answer, questionIndex) {
+export function sendShortAnswer (playerID, answer, questionIndex) {
   db.collection('player')
     .doc(String(playerID))
     .update({
@@ -189,7 +189,7 @@ export function sendShortAnswer(playerID, answer, questionIndex) {
     })
     .then(() => console.log('short answer successful'))
 }
-export async function getPlayerInfo() {
+export async function getPlayerInfo () {
   const playerInfo = []
   const player = db.collection('player')
   const res = await player.orderBy('score', 'desc').get()
@@ -198,7 +198,7 @@ export async function getPlayerInfo() {
   })
   return playerInfo
 }
-export function alignRankList(playerInfo, id) {
+export function alignRankList (playerInfo, id) {
   const rankList = playerInfo.reduce((acc, cur, index) => {
     const hasProperty = Object.prototype.hasOwnProperty.call(acc, cur.score)
     hasProperty
@@ -219,7 +219,7 @@ export function alignRankList(playerInfo, id) {
       return rank
     })
 }
-export function getRankList(examID) {
+export function getRankList (examID) {
   return db
     .collection('rankList')
     .doc(examID)
@@ -228,11 +228,38 @@ export function getRankList(examID) {
       return ele.data()
     })
 }
-export function deleteRankList(examID) {
+export function deleteRankList (examID) {
   db.collection('rankList')
     .doc(String(examID))
     .delete()
     .then(() => {
       console.log('delete successfully!')
     })
+}
+export async function deleteDataBase () {
+  db.collection('player').get().then(querySnapshot => {
+    querySnapshot.forEach(doc => {
+      db.collection('player').doc(String(doc.id)).delete()
+    })
+  })
+  db.collection('currentQuestion').get().then(querySnapshot => {
+    querySnapshot.forEach(doc => {
+      db.collection('currentQuestion').doc(String(doc.id)).delete()
+    })
+  })
+  db.collection('currentExam').get().then(querySnapshot => {
+    querySnapshot.forEach(doc => {
+      db.collection('currentExam').doc(String(doc.id)).delete()
+    })
+  })
+  db.collection('whichPage').get().then(querySnapshot => {
+    querySnapshot.forEach(doc => {
+      db.collection('whichPage').doc(String(doc.id)).delete()
+    })
+  })
+  db.collection('rankList').get().then(querySnapshot => {
+    querySnapshot.forEach(doc => {
+      db.collection('rankList').doc(String(doc.id)).delete()
+    })
+  })
 }

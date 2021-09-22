@@ -1,7 +1,7 @@
 import { db } from 'src/boot/serverConnection'
 import { deleteExam, setWhichPage } from 'src/backend/index'
 import { Notify } from 'quasar'
-export async function deleteItem(context, index) {
+export async function deleteItem (context, index) {
   const deleteSuccess = await deleteExam(index)
   if (deleteSuccess) {
     context.commit('deleteExam', index)
@@ -19,7 +19,7 @@ export async function deleteItem(context, index) {
     timeout: 1000
   })
 }
-export function getExamList(context) {
+export function getExamList (context) {
   const exam = db.collection('questions')
   exam.get().then(querySnapshot => {
     querySnapshot.forEach(doc => {
@@ -30,13 +30,13 @@ export function getExamList(context) {
     })
   })
 }
-export function changecurrentQuestiont(context) {
+export function changecurrentQuestiont (context) {
   const isFinished = context.commit('examIsFinished')
   isFinished
     ? context.commit('savecurrentQuestion')
     : context.commit('changeTeacherPage', 'game-finish')
 }
-export async function changePage(
+export async function changePage (
   context,
   { examID, studentPage, teacherPage }
 ) {
@@ -54,19 +54,19 @@ export async function changePage(
     position: 'top-right'
   })
 }
-export function changeTimeOutFlag(context, flag) {
+export function changeTimeOutFlag (context, flag) {
   context.commit('changeTimeOutFlag', flag)
   window.setTimeout(() => {
     context.commit('changeStaticFlag', flag)
   }, 1000)
 }
-export function changeSelectionType(
+export function changeSelectionType (
   context,
   { questionIndex, selectionIndex, value }
 ) {
   context.commit('changeSelectionType', [questionIndex, selectionIndex, value])
 }
-export function changeOptioniSingleAnswer(
+export function changeOptioniSingleAnswer (
   context,
   { questionIndex, selectionIndex, value }
 ) {
@@ -76,19 +76,19 @@ export function changeOptioniSingleAnswer(
     value
   ])
 }
-export function changeOptionFile(
+export function changeOptionFile (
   context,
   { questionIndex, selectionIndex, value }
 ) {
   context.commit('changeOptionFile', [questionIndex, selectionIndex, value])
 }
-export function changeOptionValue(
+export function changeOptionValue (
   context,
   { questionIndex, selectionIndex, value }
 ) {
   context.commit('changeOptionValue', [questionIndex, selectionIndex, value])
 }
-export function changeOptionMultiAnswer(
+export function changeOptionMultiAnswer (
   context,
   { questionIndex, selectionIndex, value }
 ) {

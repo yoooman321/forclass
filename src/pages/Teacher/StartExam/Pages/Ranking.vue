@@ -18,13 +18,13 @@ export default {
       type: Object
     }
   },
-  data() {
+  data () {
     return {
       id: this.$route.params.id
     }
   },
   methods: {
-    next() {
+    next () {
       this.$bus.$emit('saveCurrentQuestionToVuex')
       this.$store.dispatch('changePage', {
         examID: this.id,
