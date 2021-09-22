@@ -38,10 +38,12 @@
     <div style="float: right; margin-right: 5px; color: red; font-weight: bold;">
       ※存在超過三個月的考題會自動刪除
     </div>
+    <q-btn label="清空資料庫" color="negative" @click="showConfirmDialog"></q-btn>
   </div>
 </template>
 <script>
 import { addCurrentExamData } from 'src/backend/index'
+import { deleteDataBase } from 'src/backend/index.js'
 export default {
   data () {
     return {
@@ -98,6 +100,33 @@ export default {
     },
     editItem (data) {
       this.$router.push('/edit/' + data.examID)
+    },
+    showConfirmDialog () {
+      this.$q.dialog({
+        title: '確定要刪除?',
+        message: '刪除後學生資料會清空哦',
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
+        this.deleteData()
+      })
+    },
+    async deleteData () {
+      this.$q.loading.show()
+      try {
+        await deleteDataBase()
+        this.$q.notify({
+          message: '刪除成功',
+          type: 'positive'
+        })
+      } catch {
+        this.$q.notify({
+          message: '刪除失敗，請連絡相關人員',
+          type: 'warning'
+        })
+      } finally {
+        this.$q.loading.hide()
+      }
     }
   }
 }
